@@ -8,12 +8,12 @@ import (
 	"os"
 
 	"github.com/bool64/brick"
-	"github.com/bool64/brick-template/internal/infra"
-	"github.com/bool64/brick-template/internal/infra/nethttp"
-	"github.com/bool64/brick-template/internal/infra/service"
 	"github.com/bool64/brick/config"
 	"github.com/bool64/dev/version"
 	"github.com/swaggest/assertjson"
+	"github.com/vearutop/cache-story/internal/infra"
+	"github.com/vearutop/cache-story/internal/infra/nethttp"
+	"github.com/vearutop/cache-story/internal/infra/service"
 )
 
 func main() {

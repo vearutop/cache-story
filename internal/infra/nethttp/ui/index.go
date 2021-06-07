@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/bool64/brick-template/resources/static"
+	"github.com/vearutop/cache-story/resources/static"
 	"github.com/vearutop/statigz"
 	"github.com/vearutop/statigz/brotli"
 )

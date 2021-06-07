@@ -1,11 +1,11 @@
-# brick-template
+# cache-story
 
-[![Build Status](https://github.com/bool64/brick-template/workflows/test-unit/badge.svg)](https://github.com/bool64/brick-template/actions?query=branch%3Amaster+workflow%3Atest-unit)
-[![Coverage Status](https://codecov.io/gh/bool64/brick-template/branch/master/graph/badge.svg)](https://codecov.io/gh/bool64/brick-template)
-[![GoDevDoc](https://img.shields.io/badge/dev-doc-00ADD8?logo=go)](https://pkg.go.dev/github.com/bool64/brick-template)
-[![Time Tracker](https://wakatime.com/badge/github/bool64/brick-template.svg)](https://wakatime.com/badge/github/bool64/brick-template)
-![Code lines](https://sloc.xyz/github/bool64/brick-template/?category=code)
-![Comments](https://sloc.xyz/github/bool64/brick-template/?category=comments)
+[![Build Status](https://github.com/vearutop/cache-story/workflows/test-unit/badge.svg)](https://github.com/vearutop/cache-story/actions?query=branch%3Amaster+workflow%3Atest-unit)
+[![Coverage Status](https://codecov.io/gh/vearutop/cache-story/branch/master/graph/badge.svg)](https://codecov.io/gh/vearutop/cache-story)
+[![GoDevDoc](https://img.shields.io/badge/dev-doc-00ADD8?logo=go)](https://pkg.go.dev/github.com/vearutop/cache-story)
+[![Time Tracker](https://wakatime.com/badge/github/vearutop/cache-story.svg)](https://wakatime.com/badge/github/vearutop/cache-story)
+![Code lines](https://sloc.xyz/github/vearutop/cache-story/?category=code)
+![Comments](https://sloc.xyz/github/vearutop/cache-story/?category=comments)
 
 <!--- TODO Update README.md -->
 

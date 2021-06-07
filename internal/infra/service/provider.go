@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/bool64/brick-template/internal/domain/greeting"
+	"github.com/vearutop/cache-story/internal/domain/greeting"
 )
 
 // GreetingMakerProvider is a service provider.

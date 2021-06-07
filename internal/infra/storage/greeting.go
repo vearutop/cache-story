@@ -5,10 +5,10 @@ import (
 	"errors"
 	"time"
 
-	"github.com/bool64/brick-template/internal/domain/greeting"
 	"github.com/bool64/ctxd"
 	"github.com/bool64/sqluct"
 	"github.com/go-sql-driver/mysql"
+	"github.com/vearutop/cache-story/internal/domain/greeting"
 )
 
 // GreetingSaver saves greetings to database.

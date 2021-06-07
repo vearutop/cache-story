@@ -3,16 +3,16 @@ package main_test
 import (
 	"testing"
 
-	"github.com/bool64/brick-template/internal/infra"
-	"github.com/bool64/brick-template/internal/infra/nethttp"
-	"github.com/bool64/brick-template/internal/infra/service"
-	"github.com/bool64/brick-template/internal/infra/storage"
 	"github.com/bool64/brick/config"
 	"github.com/bool64/dbdog"
 	"github.com/bool64/httpdog"
 	"github.com/bool64/shared"
 	"github.com/cucumber/godog"
 	"github.com/stretchr/testify/require"
+	"github.com/vearutop/cache-story/internal/infra"
+	"github.com/vearutop/cache-story/internal/infra/nethttp"
+	"github.com/vearutop/cache-story/internal/infra/service"
+	"github.com/vearutop/cache-story/internal/infra/storage"
 )
 
 func TestFeatures(t *testing.T) {

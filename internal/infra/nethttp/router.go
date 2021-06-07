@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/bool64/brick"
-	"github.com/bool64/brick-template/internal/infra/nethttp/ui"
-	"github.com/bool64/brick-template/internal/infra/service"
-	"github.com/bool64/brick-template/internal/usecase"
 	"github.com/swaggest/rest/nethttp"
+	"github.com/vearutop/cache-story/internal/infra/nethttp/ui"
+	"github.com/vearutop/cache-story/internal/infra/service"
+	"github.com/vearutop/cache-story/internal/usecase"
 )
 
 // NewRouter creates an instance of router filled with handlers and docs.

@@ -4,14 +4,14 @@ import (
 	"context"
 
 	"github.com/bool64/brick"
-	"github.com/bool64/brick-template/internal/domain/greeting"
-	"github.com/bool64/brick-template/internal/infra/schema"
-	"github.com/bool64/brick-template/internal/infra/service"
-	"github.com/bool64/brick-template/internal/infra/storage"
 	"github.com/bool64/brick/database"
 	"github.com/bool64/brick/jaeger"
 	"github.com/go-sql-driver/mysql"
 	"github.com/swaggest/rest/response/gzip"
+	"github.com/vearutop/cache-story/internal/domain/greeting"
+	"github.com/vearutop/cache-story/internal/infra/schema"
+	"github.com/vearutop/cache-story/internal/infra/service"
+	"github.com/vearutop/cache-story/internal/infra/storage"
 )
 
 // NewServiceLocator creates application service locator.
