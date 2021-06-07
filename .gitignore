@@ -1,0 +1,8 @@
+/.idea
+/*.coverprofile
+/.vscode
+/bench-*.txt
+/vendor
+/bin
+/.env
+/resources/static/openapi.json

@@ -1,0 +1,22 @@
+version: "2.4" # Version 2 allows health checking outside of docker stack.
+
+services:
+  database:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: db
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=secret --execute \"SHOW DATABASES;\""
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  # Waiter blocks until services are up.
+  waiter:
+    depends_on:
+      database:
+        condition: service_healthy
+    image: busybox

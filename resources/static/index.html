@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Profiles</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/static/pure.css">
+    <script src="/static/client.js"></script>
+</head>
+<body>
+
+<div style="margin:2em">
+    <h1>Greeter</h1>
+
+    <form class="pure-form" style="display: inline-block">
+        <fieldset>
+            <legend>A minimalistic web application based on backend API</legend>
+            <input id="name" placeholder="Name"/>
+            <select id="locale" name="locale">
+                <option>en-US</option>
+                <option>ru-RU</option>
+                <option>zz-ZZ</option>
+            </select>
+            <button type="button" id="hello-btn" class="pure-button pure-button-primary">Hello</button>
+        </fieldset>
+    </form>
+</div>
+
+<script>
+    (function () {
+        "use strict";
+        var client = new Backend('');
+        document.getElementById('hello-btn').addEventListener('click', function () {
+            client.internalUsecaseHelloWorld({
+                name: document.getElementById('name').value,
+                locale: document.getElementById('locale').value
+            }, function (result) {
+                alert(result.message)
+            }, function (badRequest) {
+                alert(badRequest.error + "\n" + JSON.stringify(badRequest.context))
+            }, function (internalServerError) {
+                alert(internalServerError.error + "\n" + JSON.stringify(internalServerError.context))
+            })
+            return false;
+        });
+    })();
+</script>
+
+</body>
+</html>
