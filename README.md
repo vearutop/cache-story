@@ -10,12 +10,25 @@
 This is a demo application to showcase a few things about in-memory caching and explain design decisions
 for [github.com/bool64/cache](https://github.com/bool64/cache).
 
+_TL;DR_ In-memory caching is a great way to improve performance and resiliency of an application at cost of memory and
+delayed data consistency. You need to take care of concurrent updates, error caching, failover handling, background
+updates, expiration jitter and cache warmup with transfer.
+
 ## The Story
 
 Caching is one of the most efficient techniques to improve performance, because the fastest way to get rid of a task is
-skipping it. Unfortunately caching is not a silver bullet, in some cases you can not afford to reuse result of a task
+skipping it. Unfortunately caching is not a silver bullet, in some cases you can not afford reusing result of a task
 due to transactionality/consistency constraints. Cache invalidation is notoriously one
 of [two hard things](https://martinfowler.com/bliki/TwoHardThings.html) in Computer Science.
+
+It is best when domain operates on immutable data and so cache invalidation is not necessary. In such case cache is
+usually a net benefit. However, if there are requirements to keep mutable data in sync, cache invalidation is necessary.
+The simplest strategy is to invalidate cache based on time to live (TTL). Even if seems like a bad fit compared to
+event-based invalidation, consider simplicity and portability. Events do not guarantee timely delivery, in worst case
+scenarios (for example if event broker is temporary down or overloaded) events could be even less precise than TTL.
+
+Short TTL is often a good compromise between performance and consistency. It would reduce the load under heavy traffic
+acting as a barrier to the data source. For the low traffic impact would be negligible.
 
 ### Demo Application
 
@@ -251,7 +264,7 @@ discrepancy.
 <details>
 <summary>Here is [a sample implementation](https://github.com/bool64/cache/blob/v0.2.5/gob.go#L49-L90).</summary>
 
-```go
+```
 // RecursiveTypeHash hashes type of value recursively to ensure structural match.
 func recursiveTypeHash(t reflect.Type, h hash.Hash64, met map[reflect.Type]bool) {
 	for {
