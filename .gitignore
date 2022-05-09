@@ -6,3 +6,4 @@
 /bin
 /.env
 /resources/static/openapi.json
+/data

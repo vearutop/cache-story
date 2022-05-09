@@ -2,6 +2,7 @@ package infra
 
 import (
 	"context"
+	"time"
 
 	"github.com/bool64/brick"
 	"github.com/bool64/brick/database"
@@ -9,6 +10,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/swaggest/rest/response/gzip"
 	"github.com/vearutop/cache-story/internal/domain/greeting"
+	"github.com/vearutop/cache-story/internal/infra/cached"
 	"github.com/vearutop/cache-story/internal/infra/schema"
 	"github.com/vearutop/cache-story/internal/infra/service"
 	"github.com/vearutop/cache-story/internal/infra/storage"
@@ -29,7 +31,7 @@ func NewServiceLocator(cfg service.Config) (loc *service.Locator, err error) {
 		return nil, err
 	}
 
-	if err = jaeger.Setup(cfg.Jaeger, cfg.ServiceName, l.BaseLocator); err != nil {
+	if err = jaeger.Setup(cfg.Jaeger, l.BaseLocator); err != nil {
 		return nil, err
 	}
 
@@ -41,9 +43,23 @@ func NewServiceLocator(cfg service.Config) (loc *service.Locator, err error) {
 		return nil, err
 	}
 
-	l.GreetingMakerProvider = &storage.GreetingSaver{
+	gs := &storage.GreetingSaver{
 		Upstream: &greeting.SimpleMaker{},
 		Storage:  l.Storage,
+	}
+
+	l.GreetingMakerProvider = gs
+	l.GreetingClearerProvider = gs
+
+	if cfg.Cache == "naive" {
+		l.GreetingMakerProvider = cached.NewNaiveGreetingMaker(l.GreetingMaker(), 3*time.Minute, l.StatsTracker())
+	} else if cfg.Cache == "advanced" {
+		greetingsCache := brick.MakeCacheOf[string](l.BaseLocator, "greetings", 3*time.Minute)
+		l.GreetingMakerProvider = cached.NewGreetingMaker(l.GreetingMaker(), greetingsCache)
+
+		if err := l.TransferCache(context.Background()); err != nil {
+			l.CtxdLogger().Warn(context.Background(), "failed to transfer cache", "error", err)
+		}
 	}
 
 	return l, nil
@@ -60,7 +76,7 @@ func setupStorage(l *service.Locator, cfg database.Config) error {
 		return err
 	}
 
-	l.Storage, err = database.SetupStorage(cfg, l.CtxdLogger(), "mysql", conn, storage.Migrations)
+	l.Storage, err = database.SetupStorage(cfg, l.CtxdLogger(), l.StatsTracker(), "mysql", conn, storage.Migrations)
 	if err != nil {
 		return err
 	}

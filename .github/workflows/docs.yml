@@ -1,0 +1,45 @@
+name: docs
+on:
+  push:
+    tags:
+      - v*
+env:
+  GO111MODULE: "on"
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.x
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Restore build cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/go-build
+          key: go-build-bin-${{ hashFiles('**/go.mod') }}
+          restore-keys: go-build-bin-
+      - name: Checkout wiki
+        uses: actions/checkout@v2
+        with:
+          repository: ${{github.repository}}.wiki
+          path: wiki
+          ssh-key: ${{ secrets.SSH_KEY_FOR_PULLS }}
+      - name: Build openapi.json
+        run: |
+          make build
+          ./bin/* -openapi > openapi.json
+          cat ./openapi.json
+      - name: Generate markdown docs
+        uses: docker://swaggest/swac
+        with:
+          args: /bin/sh -c "swac markdown ./openapi.json --add-schema-url openapi.json --out ./wiki/API-Docs.md;mv -f ./openapi.json ./wiki/openapi.json"
+      - name: Push to wiki
+        run: |
+          cd wiki
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Add changes" && git push

@@ -8,3 +8,8 @@ import (
 type GreetingMakerProvider interface {
 	GreetingMaker() greeting.Maker
 }
+
+// GreetingClearerProvider is a service provider.
+type GreetingClearerProvider interface {
+	GreetingClearer() greeting.Clearer
+}

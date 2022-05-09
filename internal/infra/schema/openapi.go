@@ -6,5 +6,5 @@ import (
 
 // SetupOpenapiCollector configures OpenAPI schema.
 func SetupOpenapiCollector(c *openapi.Collector) {
-	c.Reflector().SpecEns().Info.Title = "cache-story"
+	c.Reflector().SpecEns().Info.Title = "Cache Story"
 }
