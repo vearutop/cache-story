@@ -12,4 +12,5 @@ type Locator struct {
 	Storage *sqluct.Storage
 
 	GreetingMakerProvider
+	GreetingClearerProvider
 }

@@ -1,0 +1,11 @@
+# This file configures license restrictions checked with github.com/uw-labs/lichen after application build,
+# see https://github.com/uw-labs/lichen#Config for reference.
+allow:
+  - "MIT"
+  - "Apache-2.0"
+  - "0BSD"
+  - "BSD-3-Clause"
+  - "BSD-2-Clause"
+  - "BSD-2-Clause-FreeBSD"
+  - "MPL-2.0"
+  - "ISC"

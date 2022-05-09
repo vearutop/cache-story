@@ -13,6 +13,7 @@ import (
 	"github.com/swaggest/assertjson"
 	"github.com/vearutop/cache-story/internal/infra"
 	"github.com/vearutop/cache-story/internal/infra/nethttp"
+	"github.com/vearutop/cache-story/internal/infra/schema"
 	"github.com/vearutop/cache-story/internal/infra/service"
 )
 
@@ -60,6 +61,7 @@ func main() {
 
 func printOpenAPI() {
 	l := &service.Locator{BaseLocator: brick.NoOpLocator()}
+	schema.SetupOpenapiCollector(l.OpenAPI)
 	nethttp.NewRouter(l)
 
 	j, err := assertjson.MarshalIndentCompact(l.OpenAPI.Reflector().Spec, "", " ", 80)

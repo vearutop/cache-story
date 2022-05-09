@@ -7,11 +7,8 @@
 ![Code lines](https://sloc.xyz/github/vearutop/cache-story/?category=code)
 ![Comments](https://sloc.xyz/github/vearutop/cache-story/?category=comments)
 
-<!--- TODO Update README.md -->
+This is a demo application to showcase a few things about in-memory caching.
 
-Project template with GitHub actions for Go.
+## The Story
 
-## Usage
-
-Create a new repository from this template, check out it and run `./run_me.sh` to replace template name with name of
-your repository.
+Caching is one of the most efficient techniques to improve performance.

@@ -19,6 +19,11 @@ type Maker interface {
 	Hello(ctx context.Context, params Params) (string, error)
 }
 
+// Clearer removes all greetings and returns number of affected rows.
+type Clearer interface {
+	ClearGreetings(ctx context.Context) (int, error)
+}
+
 // SimpleMaker can greet you in two locales.
 type SimpleMaker struct{}
 

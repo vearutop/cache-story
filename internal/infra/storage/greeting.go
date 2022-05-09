@@ -2,12 +2,11 @@ package storage
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/bool64/ctxd"
 	"github.com/bool64/sqluct"
-	"github.com/go-sql-driver/mysql"
+	"github.com/bool64/stats"
 	"github.com/vearutop/cache-story/internal/domain/greeting"
 )
 
@@ -15,6 +14,7 @@ import (
 type GreetingSaver struct {
 	Upstream greeting.Maker
 	Storage  *sqluct.Storage
+	Stats    stats.Tracker
 }
 
 // GreetingsTable is the name of the table.
@@ -37,23 +37,51 @@ func (gs *GreetingSaver) Hello(ctx context.Context, params greeting.Params) (str
 	q := gs.Storage.InsertStmt(GreetingsTable, GreetingRow{
 		Message:   g,
 		CreatedAt: time.Now(),
-	})
+	}).Options("IGNORE")
 
 	if _, err = gs.Storage.Exec(ctx, q); err != nil {
-		var mySQLError *mysql.MySQLError
-
-		if errors.As(err, &mySQLError) && mySQLError.Number == 1062 {
-			// Duplicate entry error.
-			return g, nil
-		}
-
 		return "", ctxd.WrapError(ctx, err, "failed to store greeting")
+	}
+
+	if err = gs.calcAvgID(ctx); err != nil {
+		return "", err
 	}
 
 	return g, nil
 }
 
+// calcAvgID makes things sloooooower 🐌.
+func (gs *GreetingSaver) calcAvgID(ctx context.Context) error {
+	r := gs.Storage.DB().QueryRowContext(ctx, "SELECT AVG(id) FROM "+GreetingsTable+" WHERE id < 1000")
+
+	var avg int
+
+	if err := r.Scan(&avg); err != nil {
+		return r.Err()
+	}
+
+	gs.Stats.Set(ctx, "avg_id", float64(avg))
+
+	return nil
+}
+
+// ClearDB removes all entries.
+func (gs *GreetingSaver) ClearGreetings(ctx context.Context) (int, error) {
+	res, err := gs.Storage.DeleteStmt(GreetingsTable).ExecContext(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	aff, err := res.RowsAffected()
+	return int(aff), err
+}
+
 // GreetingMaker implements service provider.
 func (gs *GreetingSaver) GreetingMaker() greeting.Maker {
+	return gs
+}
+
+// GreetingClearer implements service provider.
+func (gs *GreetingSaver) GreetingClearer() greeting.Clearer {
 	return gs
 }

@@ -17,19 +17,16 @@ type helloDeps interface {
 }
 
 // HelloWorld creates use case interactor.
-func HelloWorld(deps helloDeps) usecase.IOInteractor {
+func HelloWorld(deps helloDeps) usecase.Interactor {
 	type helloOutput struct {
 		Message string `json:"message"`
 	}
 
-	u := usecase.NewIOI(new(greeting.Params), new(helloOutput), func(ctx context.Context, input, output interface{}) error {
-		in := input.(*greeting.Params)
-		out := output.(*helloOutput)
-
+	u := usecase.NewInteractor(func(ctx context.Context, in greeting.Params, out *helloOutput) error {
 		deps.StatsTracker().Add(ctx, "hello", 1)
 		deps.CtxdLogger().Info(ctx, "hello", "name", in.Name)
 
-		msg, err := deps.GreetingMaker().Hello(ctx, *in)
+		msg, err := deps.GreetingMaker().Hello(ctx, in)
 
 		out.Message = msg
 
