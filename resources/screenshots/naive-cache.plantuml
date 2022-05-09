@@ -1,0 +1,97 @@
+@startuml
+
+Client -> Server : Request1 (needs Key1)
+Server -> CachedFinder : Key1
+CachedFinder -> CacheData : Find Key1
+CacheData -> CachedFinder : Key1 not found
+
+note right
+    builds in progress: 0
+end note
+
+CachedFinder -> SlowOrigin : Key1
+
+note right
+    first request starts the build
+    builds in progress: 1
+end note
+
+Client -> Server : Request2 (needs Key1 too)
+Server -> CachedFinder : Key1
+CachedFinder -> CacheData : Find Key1
+CacheData -> CachedFinder : Key1 not found
+CachedFinder -> SlowOrigin : Key1
+
+note right
+    first build is still in progress,
+    cached value is missing,
+    so second request starts the build
+    builds in progress: 2
+end note
+
+Client -> Server : Request3 (needs Key1 too)
+Server -> CachedFinder : Key1
+CachedFinder -> CacheData : Find Key1
+CacheData -> CachedFinder : Key1 not found
+CachedFinder -> SlowOrigin : Key1
+
+note right
+    first and second builds are still in progress,
+    cached value is missing,
+    so third request starts the build
+    builds in progress: 3
+end note
+
+SlowOrigin -> CachedFinder : Value1 (initiated by Request1)
+
+note right
+    first build is complete,
+    cached value is stored,
+    but other builds are still in progress
+    builds in progress: 2
+end note
+
+CachedFinder -> CacheData : Store Key1 : Value1
+CachedFinder -> Server : Value1
+Server -> Client : Response1 (with Value1)
+
+SlowOrigin -> CachedFinder : Error (initiated by Request3)
+
+note right
+    third build quickly failed,
+    request is not served even though
+    cache has a valid value at this point
+    builds in progress: 1
+end note
+
+CachedFinder -> Server : Error
+Server -> Client : Response3 (with Error)
+
+SlowOrigin -> CachedFinder : Value1 (initiated by Request2)
+
+note right
+    second build is complete,
+    cached value overwrites same valid value,
+    request is served with extra delay from the first build,
+    builds in progress: 0
+end note
+
+CachedFinder -> CacheData : Store Key1 : Value1
+CachedFinder -> Server : Value1
+Server -> Client : Response2 (with Value1)
+
+Client -> Server : Request4 (needs Key1)
+Server -> CachedFinder : Key1
+CachedFinder -> CacheData : Find Key1
+
+note right
+    cached value is immediately served to subsequent requests
+    builds in progress: 0
+end note
+
+CacheData -> CachedFinder : Value1
+CachedFinder -> Server : Value1
+Server -> Client : Response4 (with Value1)
+
+
+@enduml
