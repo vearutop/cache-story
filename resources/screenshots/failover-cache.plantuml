@@ -1,0 +1,78 @@
+@startuml
+
+Client -> Server : Request1 (needs Key1)
+Server -> CachedFinder : Key1
+CachedFinder -> FailoverCache : Get Key1 or build
+FailoverCache -> FailoverCache : Key1 not found
+FailoverCache -> FailoverCache : Acquire Key1 lock and build
+
+note right
+    builds in progress: 0
+end note
+
+FailoverCache -> SlowOrigin : Key1
+
+note right
+    first request starts the exclusive build
+    builds in progress: 1
+end note
+
+Client -> Server : Request2 (needs Key1 too)
+Server -> CachedFinder : Key1
+CachedFinder -> FailoverCache : Get Key1 or build
+FailoverCache -> FailoverCache : Block on Key1 lock
+
+note right
+    consecutive requests wait for the build to finish
+    builds in progress: 1
+end note
+
+Client -> Server : Request3 (needs Key1 too)
+Server -> CachedFinder : Key1
+CachedFinder -> FailoverCache : Get Key1 or build
+FailoverCache -> FailoverCache : Block on Key1 lock
+
+note right
+    builds in progress: 1
+end note
+
+
+SlowOrigin -> FailoverCache : Value1 (initiated by Request1)
+
+note right
+    once build is complete, the value is stored
+    and returned to all blocked requests
+    builds in progress: 0
+end note
+
+FailoverCache -> FailoverCache : Store Key1 : Value1
+FailoverCache -> FailoverCache : Release Key1 lock
+
+FailoverCache -> CachedFinder : Value1
+CachedFinder -> Server : Value1
+Server -> Client : Response1 (with Value1)
+
+FailoverCache -> CachedFinder : Value1
+CachedFinder -> Server : Value1
+Server -> Client : Response2 (with Value1)
+
+FailoverCache -> CachedFinder : Value1
+CachedFinder -> Server : Value1
+Server -> Client : Response3 (with Value1)
+
+Client -> Server : Request4 (needs Key1 too)
+Server -> CachedFinder : Key1
+CachedFinder -> FailoverCache : Get Key1 or build
+FailoverCache -> CachedFinder : Value1
+
+note right
+    cached value is immediately served to subsequent requests
+    builds in progress: 0
+end note
+
+CachedFinder -> Server : Value1
+Server -> Client : Response4 (with Value1)
+
+
+
+@enduml

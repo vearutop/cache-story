@@ -10,29 +10,6 @@ import (
 	"github.com/vearutop/cache-story/internal/domain/greeting"
 )
 
-func NewGreetingMaker(upstream greeting.Maker, cache *cache.FailoverOf[string]) *GreetingMaker {
-	return &GreetingMaker{
-		upstream: upstream,
-		cache:    cache,
-	}
-}
-
-type GreetingMaker struct {
-	upstream greeting.Maker
-	cache    *cache.FailoverOf[string]
-}
-
-func (g *GreetingMaker) GreetingMaker() greeting.Maker {
-	return g
-}
-
-func (g *GreetingMaker) Hello(ctx context.Context, params greeting.Params) (string, error) {
-	key := []byte(params.Name + params.Locale)
-	return g.cache.Get(ctx, key, func(ctx context.Context) (string, error) {
-		return g.upstream.Hello(ctx, params)
-	})
-}
-
 type NaiveGreetingMaker struct {
 	mu       sync.RWMutex
 	ttl      time.Duration
@@ -65,20 +42,20 @@ func (g *NaiveGreetingMaker) Hello(ctx context.Context, params greeting.Params) 
 	g.mu.RUnlock()
 
 	if !found {
-		g.stats.Add(ctx, cache.MetricMiss, 1, "name", "greeting-naive")
+		g.stats.Add(ctx, cache.MetricMiss, 1, "name", "greetings-naive")
 	}
 
 	expired := found && val.expires.Before(time.Now())
 	if expired {
-		g.stats.Add(ctx, cache.MetricExpired, 1, "name", "greeting-naive")
+		g.stats.Add(ctx, cache.MetricExpired, 1, "name", "greetings-naive")
 	}
 
 	if !found || expired {
-		g.stats.Add(ctx, cache.MetricWrite, 1, "name", "greeting-naive")
+		g.stats.Add(ctx, cache.MetricWrite, 1, "name", "greetings-naive")
 
 		gr, err := g.upstream.Hello(ctx, params)
 		if err != nil {
-			g.stats.Add(ctx, cache.MetricFailed, 1, "name", "greeting-naive")
+			g.stats.Add(ctx, cache.MetricFailed, 1, "name", "greetings-naive")
 			return gr, err
 		}
 
@@ -90,12 +67,12 @@ func (g *NaiveGreetingMaker) Hello(ctx context.Context, params greeting.Params) 
 
 		g.data[params] = val
 
-		g.stats.Set(ctx, cache.MetricItems, float64(len(g.data)), "name", "greeting-naive")
+		g.stats.Set(ctx, cache.MetricItems, float64(len(g.data)), "name", "greetings-naive")
 
 		return val.value, nil
 	}
 
-	g.stats.Add(ctx, cache.MetricHit, 1, "name", "greeting-naive")
+	g.stats.Add(ctx, cache.MetricHit, 1, "name", "greetings-naive")
 
 	return val.value, nil
 }
