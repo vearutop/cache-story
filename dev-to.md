@@ -33,7 +33,7 @@ Such a command will start a client that will send 10000 different URLs in the lo
 
 It will show live performance statistics and overall results.
 
-![cplt screenshot](./resources/screenshots/cplt.png)
+![cplt screenshot](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/fzcfh87spbds94prew9m.png)
 
 Demo app has three modes of operation controlled by `CACHE` environment variable:
 
@@ -49,11 +49,11 @@ It depends on `docker-compose` to spin up database, prometheus, grafana (http://
 On my machine I was able to achieve ~500 RPS with no cache. After ~130 concurrent requests DB starts choking with `Too many connections`. Such result is not great, not terrible, but looks like an improvement opportunity.
 Let's see what we can achieve with help of caching.
 
-![Baseline Performance](./resources/screenshots/baseline.png)
+![Baseline Performance](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/syv6xepamz7e8ohkj24z.png)
 
 With `advanced` cache same laptop was able to show these results (roughly 60x throughput with lower latency).
 
-![Advanced Performance](./resources/screenshots/advanced.png)
+![Advanced Performance](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/d0t8zb4yixkbzuvg30md.png)
 
 ```
 go run ./cmd/cplt --cardinality 10000 --group 100 --live-ui --duration 10h curl --concurrency 100 -X 'GET'   'http://127.0.0.1:8008/hello?name=World&locale=ru-RU'   -H 'accept: application/json'
@@ -115,7 +115,7 @@ When multiple callers simultaneously miss the same key, they will all try to bui
 Additionally, there will be extra latency for all the callers that would try to build the value.
 If some of those builds fail, parent callers will fail even though there might be a valid value in the cache.
 
-![Naive Cache Diagram](./resources/screenshots/naive-cache.png)
+![Naive Cache Diagram](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/5ejk4kc13gzwe2jwdse9.png)
 
 The issue can be simulated by using low cardinality with high grouping, so that many similar requests are sent at once.
 
@@ -123,7 +123,7 @@ The issue can be simulated by using low cardinality with high grouping, so that 
 go run ./cmd/cplt --cardinality 100 --group 1000 --live-ui --duration 10h --rate-limit 5000 curl --concurrency 150 -X 'GET'   'http://127.0.0.1:8008/hello?name=World&locale=ru-RU'   -H 'accept: application/json'
 ```
 
-![Key Locking](./resources/screenshots/key-lock.png)
+![Key Locking](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/6vek8tunyvd365xk2rlg.png)
 
 This chart shows application started with `naive` cache and then, on the blue marker it was restarted with `advanced` cache. As you can see key locking can have a significant impact on performance (mind _Incoming Request Latency_) and resource usage (mind _DB Operation Rate_).
 
@@ -131,7 +131,7 @@ The solution could be to block parallel builds, so that only one build is in pro
 
 A better solution is to lock the builds per key, so that one of the callers acquires the lock and owns the build, while all the others wait for the value.
 
-![Locked Cache Diagram](./resources/screenshots/failover-cache.png)
+![Locked Cache Diagram](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/id50q78vc75gyt361s5z.png)
 
 ### Background Updates
 
@@ -211,8 +211,8 @@ Go has a built-in binary serialization format `encoding/gob`. It helps to transf
 
 Another caveat with cache transfer is that different versions of application may have different data structures that are not necessarily compatible. To mitigate this issue, you can fingerprint cached structures (using reflection) and abort transfer in case of discrepancy.
 
-<details>
-<summary>Here is [a sample implementation](https://github.com/bool64/cache/blob/v0.2.5/gob.go#L49-L90).</summary>
+
+{% spoiler Here is [a sample implementation](https://github.com/bool64/cache/blob/v0.2.5/gob.go#L49-L90). %}
 
 ```go
 // RecursiveTypeHash hashes type of value recursively to ensure structural match.
@@ -259,7 +259,7 @@ func recursiveTypeHash(t reflect.Type, h hash.Hash64, met map[reflect.Type]bool)
 }
 ```
 
-</details>
+{% endspoiler %}
 
 Transfer can be done with HTTP or any other suitable protocol. In this example, we will use HTTP, served at [`/debug/transfer-cache`](https://pkg.go.dev/github.com/bool64/cache#HTTPTransfer.Export). Please be aware that cache may contain sensitive information and should not have exposure to public.
 
@@ -275,7 +275,7 @@ CACHE_TRANSFER_URL=http://127.0.0.1:8008/debug/transfer-cache HTTP_LISTEN_ADDR=1
 2022-05-09T02:34:01.162+0200    INFO    cache/http.go:175       cache dump finished     {"processed": 10000, "elapsed": "12.654621ms", "bytes": 537846, "speed": "40.530944 MB/s", "name": "greetings", "trace.id": "31aeeb8e9e622b3cd3e1aa29fa3334af", "transaction.id": "a0e8d90542325ab4"}
 ```
 
-![Cache Transfer](./resources/screenshots/cache-transfer.png)
+![Cache Transfer](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/n3ueq5zysxofde50bj01.png)
 
 This chart shows application restarts at blue markers, last two are made with cache transfer. You can see that performance remains unaffected, while when there is no cache transfer there is a significant warmup penalty.
 
