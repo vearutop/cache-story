@@ -29,7 +29,7 @@ Custom `plt` has additional parameters:
 go run ./cmd/cplt --cardinality 10000 --group 100 --live-ui --duration 10h --rate-limit 5000 curl --concurrency 200 -X 'GET'   'http://127.0.0.1:8008/hello?name=World&locale=ru-RU'   -H 'accept: application/json'
 ```
 
-Such a command will start a client that will send 10000 different URLs in the loop, trying keep rate of 5000 requests per second by using up to 200 concurrent requests. Every URLs would be sent in a batch of 100 requests to imitate concurrency on a single resource.
+Such a command will start a client that will send 10000 different URLs in the loop, trying keep rate of 5000 requests per second by using up to 200 concurrent requests. Every URL would be sent in a batch of 100 requests to imitate concurrency on a single resource.
 
 It will show live performance statistics and overall results.
 
