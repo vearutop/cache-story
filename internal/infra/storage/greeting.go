@@ -65,7 +65,7 @@ func (gs *GreetingSaver) calcAvgID(ctx context.Context) error {
 	return nil
 }
 
-// ClearDB removes all entries.
+// ClearGreetings removes all entries.
 func (gs *GreetingSaver) ClearGreetings(ctx context.Context) (int, error) {
 	res, err := gs.Storage.DeleteStmt(GreetingsTable).ExecContext(ctx)
 	if err != nil {

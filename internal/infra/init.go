@@ -46,6 +46,7 @@ func NewServiceLocator(cfg service.Config) (loc *service.Locator, err error) {
 	gs := &storage.GreetingSaver{
 		Upstream: &greeting.SimpleMaker{},
 		Storage:  l.Storage,
+		Stats:    l.StatsTracker(),
 	}
 
 	l.GreetingMakerProvider = gs
