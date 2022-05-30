@@ -129,6 +129,8 @@ jobs:
           ls -lah ../allure-results
           echo "ALLURE REPORT"
           ls -lah ../allure-report
+          echo "ALLURE HISTORY"
+          ls -lah ../allure-history
           echo "GH PAGES"
           ls -lah
           git config --local user.email "action@github.com"
