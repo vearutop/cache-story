@@ -17,7 +17,7 @@ env:
   RUN_BASE_COVERAGE: "on"  # Runs test for PR base in case base test coverage is missing.
   DOCKER_COMPOSE_FILE: ./docker-compose.yml
   GO_VERSION: 1.18.x
-  GODOG_ALLURE: "on",
+  GODOG_ALLURE: "on"
 jobs:
   test-integration:
     runs-on: ubuntu-latest
