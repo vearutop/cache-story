@@ -126,7 +126,7 @@ jobs:
 
       - name: Push to gh-pages
         run: |
-          sudo chown -R ./
+          sudo chown -R runner:docker ./
           cd gh-pages
           echo "PROJECT"
           ls -lah ../
