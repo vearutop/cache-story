@@ -17,7 +17,7 @@ env:
   RUN_BASE_COVERAGE: "on"  # Runs test for PR base in case base test coverage is missing.
   COV_GO_VERSION: 1.18.x   # Version of Go to collect coverage
 jobs:
-  test-unit:
+  test:
     strategy:
       matrix:
         go-version: [ 1.18.x ]
@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Install Go stable
         if: matrix.go-version != 'tip'
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
       - name: Install Go tip
@@ -103,3 +103,9 @@ jobs:
             ```
             </details>
 
+      - name: Upload code coverage
+        if: matrix.go-version == env.COV_GO_VERSION
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./unit.coverprofile
+          flags: unittests
