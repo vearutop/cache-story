@@ -126,6 +126,7 @@ jobs:
 
       - name: Push to gh-pages
         run: |
+          sudo chown -R ./
           cd gh-pages
           echo "PROJECT"
           ls -lah ../
