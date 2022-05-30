@@ -11,6 +11,7 @@ require (
 	github.com/bool64/httptestbench v0.1.4
 	github.com/bool64/sqluct v0.1.9
 	github.com/bool64/stats v0.2.2
+	github.com/cucumber/godog v0.12.5
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/godogx/dbsteps v0.1.2
 	github.com/stretchr/testify v1.7.1
@@ -40,7 +41,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
 	github.com/cucumber/gherkin-go/v19 v19.0.3 // indirect
-	github.com/cucumber/godog v0.12.5 // indirect
 	github.com/cucumber/messages-go/v16 v16.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect

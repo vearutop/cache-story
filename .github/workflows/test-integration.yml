@@ -18,7 +18,7 @@ env:
   DOCKER_COMPOSE_FILE: ./docker-compose.yml
   GO_VERSION: 1.18.x
 jobs:
-  test:
+  test-integration:
     runs-on: ubuntu-latest
     steps:
       - name: Install Go stable
@@ -100,3 +100,18 @@ jobs:
             ${{ steps.test.outputs.diff }}
             ```
             </details>
+      - name: Checkout gh-pages
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          path: gh-pages
+      - name: Generate html
+        run: |
+          cp -f ./integration.txt ./gh-pages/index.html
+      - name: Push to gh-pages
+        run: |
+          cd gh-pages
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Add changes" && git push
