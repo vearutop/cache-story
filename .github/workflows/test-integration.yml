@@ -138,7 +138,7 @@ jobs:
           ls -lahR ../allure-history
           echo "GH PAGES"
           ls -lah
-          cp -fr ../allure-history ./allure-history
+          cp -r ../allure-history ./allure-history
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
