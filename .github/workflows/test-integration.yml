@@ -130,11 +130,11 @@ jobs:
           echo "PROJECT"
           ls -lah ../
           echo "ALLURE RESULTS"
-          ls -lah ../allure-results
+          ls -lahR ../allure-results
           echo "ALLURE REPORT"
-          ls -lah ../allure-report
+          ls -lahR ../allure-report
           echo "ALLURE HISTORY"
-          ls -lah ../allure-history
+          ls -lahR ../allure-history
           echo "GH PAGES"
           ls -lah
           cp -fr ../allure-history ./allure-history
