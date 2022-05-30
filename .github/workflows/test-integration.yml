@@ -123,6 +123,13 @@ jobs:
       - name: Push to gh-pages
         run: |
           cd gh-pages
+          echo "PROJECT"
+          ls -lah ../
+          echo "ALLURE RESULTS"
+          ls -lah ../allure-results
+          echo "ALLURE REPORT"
+          ls -lah ../allure-report
+          echo "GH PAGES"
           ls -lah
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
