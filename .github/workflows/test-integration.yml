@@ -75,6 +75,7 @@ jobs:
         id: test
         run: |
           make test-integration
+          ls -lah
           go tool cover -func=./integration.coverprofile | sed -e 's/.go:[0-9]*:\t/.go\t/g' | sed -e 's/\t\t*/\t/g'  > integration.txt
           OUTPUT=$(test -e integration-base.txt && (diff integration-base.txt integration.txt || exit 0) || cat integration.txt)
           echo "${OUTPUT}"
@@ -122,6 +123,7 @@ jobs:
       - name: Push to gh-pages
         run: |
           cd gh-pages
+          ls -lah
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
