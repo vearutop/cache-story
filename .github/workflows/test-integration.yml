@@ -21,6 +21,7 @@ env:
   ALLURE_ENV_TICKET: ${{ github.event.pull_request.title }}
   ALLURE_EXECUTOR_TYPE: github
   ALLURE_EXECUTOR_NAME: IntegrationTest
+  ALLURE_EXECUTOR_URL: https://github.com/vearutop/cache-story/pull/${{github.event.issue.number}}
   ALLURE_ENV_APP: cache-story
 jobs:
   test-integration:
@@ -88,6 +89,7 @@ jobs:
         run: |
           OUTPUT=$(make test-integration || echo "::set-output name=failed::true")
           echo ${OUTPUT}
+          OUTPUT="${OUTPUT//$'\n'/%0A}"
           echo "TEST_OUTPUT=$(echo $OUTPUT)" >> $GITHUB_ENV
           go tool cover -func=./integration.coverprofile | sed -e 's/.go:[0-9]*:\t/.go\t/g' | sed -e 's/\t\t*/\t/g'  > integration.txt
           DIFF=$(test -e integration-base.txt && (diff integration-base.txt integration.txt || exit 0) || cat integration.txt)
