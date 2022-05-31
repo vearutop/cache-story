@@ -124,24 +124,31 @@ jobs:
           allure_history: allure-history
           keep_reports: 20
 
-      - name: Push to gh-pages
-        run: |
-          sudo chown -R runner:docker ./
-          cd gh-pages
-          echo "PROJECT"
-          ls -lah ../
-          echo "ALLURE RESULTS"
-          ls -lahR ../allure-results
-          echo "ALLURE REPORT"
-          ls -lahR ../allure-report
-          echo "ALLURE HISTORY"
-          ls -lahR ../allure-history
-          rm -rf ../allure-history/.git
-          echo "GH PAGES"
-          ls -lah
-          cp -r ../allure-history ./allure-history
-          cp -r ../allure-report ./allure-report
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git diff-index --quiet HEAD || git commit -m "Add changes" && git push
+      - name: Deploy report to Github Pages
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: allure-history
+
+#      - name: Push to gh-pages
+#        run: |
+#          sudo chown -R runner:docker ./
+#          cd gh-pages
+#          echo "PROJECT"
+#          ls -lah ../
+#          echo "ALLURE RESULTS"
+#          ls -lahR ../allure-results
+#          echo "ALLURE REPORT"
+#          ls -lahR ../allure-report
+#          echo "ALLURE HISTORY"
+#          ls -lahR ../allure-history
+#          rm -rf ../allure-history/.git
+#          echo "GH PAGES"
+#          ls -lah
+#          cp -r ../allure-history ./allure-history
+#          cp -r ../allure-report ./allure-report
+#          git config --local user.email "action@github.com"
+#          git config --local user.name "GitHub Action"
+#          git add .
+#          git diff-index --quiet HEAD || git commit -m "Add changes" && git push
