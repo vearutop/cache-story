@@ -87,21 +87,6 @@ jobs:
       - name: Store base coverage
         if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
         run: cp integration.txt integration-base.txt
-      - name: Comment Test Coverage
-        continue-on-error: true
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          header: integration-test
-          message: |
-            ### Integration Test Coverage
-            ${{ steps.test.outputs.total }}
-            <details><summary>Coverage diff with base branch</summary>
-
-            ```diff
-            ${{ steps.test.outputs.diff }}
-            ```
-            </details>
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
@@ -130,6 +115,25 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
+
+      - name: Comment Test Coverage
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: integration-test
+          message: |
+            ### Integration Test Coverage
+            ${{ steps.test.outputs.total }}
+            <details><summary>Coverage diff with base branch</summary>
+
+            ```diff
+            ${{ steps.test.outputs.diff }}
+            ```
+            </details>
+            [Allure report](https://vearutop.github.io/cache-story/${{ github.run_number }}/).
+
+
 
 #      - name: Push to gh-pages
 #        run: |
