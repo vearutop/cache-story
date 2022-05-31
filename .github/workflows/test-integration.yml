@@ -19,9 +19,7 @@ env:
   GO_VERSION: 1.18.x
   GODOG_ALLURE: "on"
   ALLURE_ENV_TICKET: ${{ github.event.pull_request.title }}
-  ALLURE_EXECUTOR_TYPE: github
-  ALLURE_EXECUTOR_NAME: IntegrationTest
-  ALLURE_EXECUTOR_URL: https://github.com/vearutop/cache-story/pull/${{github.event.issue.number}}
+  ALLURE_ENV_URL: https://github.com/vearutop/cache-story/pull/${{github.event.issue.number}}
   ALLURE_ENV_APP: cache-story
 jobs:
   test-integration:
@@ -87,10 +85,7 @@ jobs:
       - name: Run test
         id: test
         run: |
-          OUTPUT=$(make test-integration || echo "::set-output name=failed::true")
-          echo ${OUTPUT}
-          OUTPUT="${OUTPUT//$'\n'/%0A}"
-          echo "TEST_OUTPUT=$(echo $OUTPUT)" >> $GITHUB_ENV
+          set -o pipefail && make test-integration || echo "::set-output name=failed::true" | tee integration_test.txt
           go tool cover -func=./integration.coverprofile | sed -e 's/.go:[0-9]*:\t/.go\t/g' | sed -e 's/\t\t*/\t/g'  > integration.txt
           DIFF=$(test -e integration-base.txt && (diff integration-base.txt integration.txt || exit 0) || cat integration.txt)
           echo "${DIFF}"
@@ -158,5 +153,5 @@ jobs:
         if: ${{ steps.test.outputs.failed }} == 'true'
         run: |
           echo "::error ::Test failed"
-          echo ${TEST_OUTPUT}
+          cat integration_test.txt
           exit 1
