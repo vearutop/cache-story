@@ -1,0 +1,4 @@
+{
+ "status":"INVALID_ARGUMENT","error":"--invalid argument: validation failed",
+ "context":{"query:locale":["#: value must be one of \"en-US\", \"ru-RU\""]}
+}
