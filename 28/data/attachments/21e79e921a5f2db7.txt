@@ -1,0 +1,4 @@
+{
+ "error":"#$@@^! %C 🤖",
+ "context":{"trace.id":"<ignore-diff>","transaction.id":"<ignore-diff>"}
+}
