@@ -18,6 +18,10 @@ env:
   DOCKER_COMPOSE_FILE: ./docker-compose.yml
   GO_VERSION: 1.18.x
   GODOG_ALLURE: "on"
+  ALLURE_ENV_TICKET: ${{ github.event.pull_request.title }}
+  ALLURE_EXECUTOR_TYPE: github
+  ALLURE_EXECUTOR_NAME: IntegrationTest
+  ALLURE_ENV_APP: cache-story
 jobs:
   test-integration:
     runs-on: ubuntu-latest
@@ -84,17 +88,17 @@ jobs:
         run: |
           OUTPUT=$(make test-integration) || FAILED=$?
           echo ${FAILED}
-          echo ${TEST}
+          echo ${OUTPUT}
           go tool cover -func=./integration.coverprofile | sed -e 's/.go:[0-9]*:\t/.go\t/g' | sed -e 's/\t\t*/\t/g'  > integration.txt
           DIFF=$(test -e integration-base.txt && (diff integration-base.txt integration.txt || exit 0) || cat integration.txt)
           echo "${DIFF}"
-          OUTPUT="${OUTPUT//$'\n'/%0A}"
+          DIFF="${DIFF//$'\n'/%0A}"
           TOTAL=$(grep 'total:' integration.txt)
           echo "${TOTAL}"
           echo "::set-output name=diff::$DIFF"
           echo "::set-output name=total::$TOTAL"
-          echo "::set-output name=failed::${FAILED}"
-          echo "::set-output name=output::${OUTPUT}"
+          echo "::set-output name=failed::$FAILED"
+          echo "::set-output name=output::$OUTPUT"
 
       - name: Store base coverage
         if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
