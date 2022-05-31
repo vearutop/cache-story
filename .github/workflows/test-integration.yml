@@ -128,7 +128,7 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Generate allure Report
+      - name: Generate allure report
         continue-on-error: true
         uses: simple-elf/allure-report-action@master
         with:
@@ -145,3 +145,9 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
+
+      - name: Check test result
+        if: ${{ steps.test.outputs.failed }} == 'true'
+        run: |
+          echo "::error ::Test failed"
+          exit 1
