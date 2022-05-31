@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
+
       - name: Install Go tip
         if: env.GO_VERSION == 'tip'
         run: |
@@ -36,8 +37,10 @@ jobs:
           tar -C ~/sdk/gotip -xzf gotip.tar.gz
           ~/sdk/gotip/bin/go version
           echo "PATH=$HOME/go/bin:$HOME/sdk/gotip/bin/:$PATH" >> $GITHUB_ENV
+
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Go cache
         uses: actions/cache@v2
         with:
@@ -50,6 +53,7 @@ jobs:
           key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-cache
+
       - name: Restore base test coverage
         id: base-coverage
         uses: actions/cache@v2
@@ -58,19 +62,23 @@ jobs:
             integration-base.txt
           # Use base sha for PR or new commit hash for master/main push in test result key.
           key: ${{ runner.os }}-integration-test-coverage-${{ (github.event.pull_request.base.sha != github.event.after) && github.event.pull_request.base.sha || github.event.after }}
+
       - name: Checkout base code
         if: env.RUN_BASE_COVERAGE == 'on' && steps.base-coverage.outputs.cache-hit != 'true' && github.event.pull_request.base.sha != ''
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: __base
+
       - name: Docker Compose
         run: (test -f ${{ env.DOCKER_COMPOSE_FILE }} && docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d && docker ps && docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} logs) || echo "::warning ::Missing ${{ env.DOCKER_COMPOSE_FILE }} file"
+
       - name: Run test for base code
         if: env.RUN_BASE_COVERAGE == 'on' && steps.base-coverage.outputs.cache-hit != 'true' && github.event.pull_request.base.sha != ''
         run: |
           cd __base
           make | grep test-integration && (make test-integration && go tool cover -func=./integration.coverprofile | sed -e 's/.go:[0-9]*:\t/.go\t/g' | sed -e 's/\t\t*/\t/g'  > ../integration-base.txt) || echo "No test-integration in base"
+
       - name: Test
         id: test
         run: |
@@ -84,37 +92,10 @@ jobs:
           echo "${TOTAL}"
           echo "::set-output name=diff::$OUTPUT"
           echo "::set-output name=total::$TOTAL"
+
       - name: Store base coverage
         if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
         run: cp integration.txt integration-base.txt
-
-      - name: Upload code coverage
-        uses: codecov/codecov-action@v1
-        with:
-          file: ./integration.coverprofile
-          flags: integrationtests
-
-      - name: Checkout gh-pages
-        uses: actions/checkout@v2
-        with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Allure Report
-        uses: simple-elf/allure-report-action@master
-        with:
-          allure_results: allure-results
-          gh_pages: gh-pages
-          allure_report: allure-report
-          allure_history: allure-history
-          keep_reports: 20
-
-      - name: Deploy report to Github Pages
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
 
       - name: Comment Test Coverage
         continue-on-error: true
@@ -124,6 +105,9 @@ jobs:
           header: integration-test
           message: |
             ### Integration Test Coverage
+
+            [Allure report](https://vearutop.github.io/cache-story/${{ github.run_number }}/).
+
             ${{ steps.test.outputs.total }}
             <details><summary>Coverage diff with base branch</summary>
 
@@ -131,28 +115,34 @@ jobs:
             ${{ steps.test.outputs.diff }}
             ```
             </details>
-            [Allure report](https://vearutop.github.io/cache-story/${{ github.run_number }}/).
 
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./integration.coverprofile
+          flags: integrationtests
 
+      - name: Checkout gh-pages
+        continue-on-error: true
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          path: gh-pages
 
-#      - name: Push to gh-pages
-#        run: |
-#          sudo chown -R runner:docker ./
-#          cd gh-pages
-#          echo "PROJECT"
-#          ls -lah ../
-#          echo "ALLURE RESULTS"
-#          ls -lahR ../allure-results
-#          echo "ALLURE REPORT"
-#          ls -lahR ../allure-report
-#          echo "ALLURE HISTORY"
-#          ls -lahR ../allure-history
-#          rm -rf ../allure-history/.git
-#          echo "GH PAGES"
-#          ls -lah
-#          cp -r ../allure-history ./allure-history
-#          cp -r ../allure-report ./allure-report
-#          git config --local user.email "action@github.com"
-#          git config --local user.name "GitHub Action"
-#          git add .
-#          git diff-index --quiet HEAD || git commit -m "Add changes" && git push
+      - name: Generate allure Report
+        continue-on-error: true
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 50
+
+      - name: Deploy allure report to Github Pages
+        continue-on-error: true
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: allure-history
