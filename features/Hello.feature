@@ -34,7 +34,7 @@ Feature: Hello, World!
     Then I should have response with body
     """
     {
-     "error":"#$@@^! %C 🤖",
+     "error":"-----#$@@^! %C 🤖",
      "context":{"trace.id":"<ignore-diff>","transaction.id":"<ignore-diff>"}
     }
     """
