@@ -89,7 +89,6 @@ jobs:
           OUTPUT=$(make test-integration) || FAILED=$?
           echo ${FAILED}
           echo ${OUTPUT}
-          echo "::set-env name=FAILED::$FAILED"
           echo "::set-env name=OUTPUT::$OUTPUT"
           go tool cover -func=./integration.coverprofile | sed -e 's/.go:[0-9]*:\t/.go\t/g' | sed -e 's/\t\t*/\t/g'  > integration.txt
           DIFF=$(test -e integration-base.txt && (diff integration-base.txt integration.txt || exit 0) || cat integration.txt)
@@ -99,6 +98,7 @@ jobs:
           echo "${TOTAL}"
           echo "::set-output name=diff::$DIFF"
           echo "::set-output name=total::$TOTAL"
+          echo "::set-output name=failed::$FAILED"
 
       - name: Store base coverage
         if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
@@ -155,7 +155,7 @@ jobs:
           PUBLISH_DIR: allure-history
 
       - name: Check test result
-        if: ${FAILED} != 0
+        if: ${{ steps.test.outputs.failed }} != 0
         run: |
           echo "::error ::Test failed"
           echo ${OUTPUT}

@@ -196,8 +196,8 @@ github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LB
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
 github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 h1:p104kn46Q8WdvHunIJ9dAyjPVtrBPhSr3KT2yUst43I=
 github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0/go.mod h1:fyg7847qk6SyHyPtNmDHnmrv/HOrqktSC+C9fM+CJOE=
-github.com/godogx/allure v0.0.0-20220531011644-ea905c981616 h1:GbCmF7/RaLj79bFEqPmTRYOkFXrfQBgYXnHL48L8xn8=
-github.com/godogx/allure v0.0.0-20220531011644-ea905c981616/go.mod h1:JaCkrPEaHWS0Y2Ii0FdyUmL+tWUS5CDjsNLekrapqHU=
+github.com/godogx/allure v0.1.0 h1:xbaLjqoGL8QBZUFfSYiPnRrHZHsuxbzwROiV8WX2lXI=
+github.com/godogx/allure v0.1.0/go.mod h1:JaCkrPEaHWS0Y2Ii0FdyUmL+tWUS5CDjsNLekrapqHU=
 github.com/godogx/dbsteps v0.1.2 h1:MLpxpqCxXZrdvA/r8o8M+xKjrpmb+RTye1YWkvATFyk=
 github.com/godogx/dbsteps v0.1.2/go.mod h1:kY6x9odRDEfymsLJ/O3VnX4LJBa23PhTdKjJzJgnMJM=
 github.com/godogx/httpsteps v0.2.3 h1:pY5VZ5j9gstp/cJvovluw2KEiwoqVYGXCP1HamQxwr8=

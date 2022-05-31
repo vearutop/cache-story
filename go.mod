@@ -49,7 +49,7 @@ require (
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
-	github.com/godogx/allure v0.0.0-20220531011644-ea905c981616 // indirect
+	github.com/godogx/allure v0.1.0 // indirect
 	github.com/godogx/httpsteps v0.2.3 // indirect
 	github.com/godogx/resource v0.1.0 // indirect
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect
