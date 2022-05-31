@@ -82,8 +82,7 @@ jobs:
       - name: Test
         id: test
         run: |
-          make test-integration
-          ls -lah
+          make test-integration || echo "::set-output name=failed::true"
           go tool cover -func=./integration.coverprofile | sed -e 's/.go:[0-9]*:\t/.go\t/g' | sed -e 's/\t\t*/\t/g'  > integration.txt
           OUTPUT=$(test -e integration-base.txt && (diff integration-base.txt integration.txt || exit 0) || cat integration.txt)
           echo "${OUTPUT}"
