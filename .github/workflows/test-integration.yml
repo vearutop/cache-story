@@ -79,20 +79,22 @@ jobs:
           cd __base
           make | grep test-integration && (make test-integration && go tool cover -func=./integration.coverprofile | sed -e 's/.go:[0-9]*:\t/.go\t/g' | sed -e 's/\t\t*/\t/g'  > ../integration-base.txt) || echo "No test-integration in base"
 
-      - name: Test
+      - name: Run test
         id: test
         run: |
-          TEST=$(make test-integration) || FAILED=$?
+          OUTPUT=$(make test-integration) || FAILED=$?
           echo ${FAILED}
           echo ${TEST}
           go tool cover -func=./integration.coverprofile | sed -e 's/.go:[0-9]*:\t/.go\t/g' | sed -e 's/\t\t*/\t/g'  > integration.txt
-          OUTPUT=$(test -e integration-base.txt && (diff integration-base.txt integration.txt || exit 0) || cat integration.txt)
-          echo "${OUTPUT}"
+          DIFF=$(test -e integration-base.txt && (diff integration-base.txt integration.txt || exit 0) || cat integration.txt)
+          echo "${DIFF}"
           OUTPUT="${OUTPUT//$'\n'/%0A}"
           TOTAL=$(grep 'total:' integration.txt)
           echo "${TOTAL}"
-          echo "::set-output name=diff::$OUTPUT"
+          echo "::set-output name=diff::$DIFF"
           echo "::set-output name=total::$TOTAL"
+          echo "::set-output name=failed::${FAILED}"
+          echo "::set-output name=output::${OUTPUT}"
 
       - name: Store base coverage
         if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
@@ -149,7 +151,8 @@ jobs:
           PUBLISH_DIR: allure-history
 
       - name: Check test result
-        if: ${{ steps.test.outputs.failed }} == 'true'
+        if: ${{ steps.test.outputs.failed }} != 0
         run: |
-          echo "::error ::Test failed, please check Test step logs"
+          echo "::error ::Test failed"
+          echo ${{ steps.test.outputs.output }}
           exit 1
