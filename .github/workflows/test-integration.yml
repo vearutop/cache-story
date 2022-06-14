@@ -19,7 +19,7 @@ env:
   GO_VERSION: 1.18.x
   GODOG_ALLURE: "on"
   ALLURE_ENV_TICKET: ${{ github.event.pull_request.title }}
-  ALLURE_ENV_URL: https://github.com/vearutop/cache-story/pull/${{github.event.issue.number}}
+  ALLURE_ENV_PULL_REQUEST_URL: https://github.com/vearutop/cache-story/pull/${{github.event.issue.number}}
   ALLURE_ENV_APP: cache-story
 jobs:
   test-integration:
