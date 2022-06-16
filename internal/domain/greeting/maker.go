@@ -33,6 +33,10 @@ func (s *SimpleMaker) Hello(ctx context.Context, params Params) (string, error) 
 		return "", ctxd.NewError(ctx, "#$@@^! %C 🤖")
 	}
 
+	if false {
+		println("foo")
+	}
+
 	switch params.Locale {
 	case "en-US":
 		return "Hello, " + params.Name + "!", nil
@@ -45,5 +49,9 @@ func (s *SimpleMaker) Hello(ctx context.Context, params Params) (string, error) 
 
 // GreetingMaker implements service provider.
 func (s *SimpleMaker) GreetingMaker() Maker {
+	if false {
+		println("foo")
+	}
+
 	return s
 }
