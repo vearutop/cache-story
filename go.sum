@@ -95,8 +95,8 @@ github.com/bool64/dev v0.1.38/go.mod h1:cTHiTDNc8EewrQPy3p1obNilpMpdmlUesDkFTF2z
 github.com/bool64/dev v0.1.41/go.mod h1:cTHiTDNc8EewrQPy3p1obNilpMpdmlUesDkFTF2zRWU=
 github.com/bool64/dev v0.2.4/go.mod h1:cTHiTDNc8EewrQPy3p1obNilpMpdmlUesDkFTF2zRWU=
 github.com/bool64/dev v0.2.5/go.mod h1:cTHiTDNc8EewrQPy3p1obNilpMpdmlUesDkFTF2zRWU=
-github.com/bool64/dev v0.2.16-0.20220616232059-b68c67c1b779 h1:0lrwBqn7mjp0W0MggtO6L0ogBnmFoYMzIy5rB36MuWc=
-github.com/bool64/dev v0.2.16-0.20220616232059-b68c67c1b779/go.mod h1:/csLrm+4oDSsKJRIVS0mrywAonLnYKFG8RvGT7Jh9b8=
+github.com/bool64/dev v0.2.16 h1:ZlybgWWXmHGMojqIjDrtl5QF6jmE4hNeojE00nioVk0=
+github.com/bool64/dev v0.2.16/go.mod h1:/csLrm+4oDSsKJRIVS0mrywAonLnYKFG8RvGT7Jh9b8=
 github.com/bool64/godogx v0.1.1 h1:iAwnix6HQgl7A5BAJ4mMvWbhR721GHNxeAAKFEjrWO4=
 github.com/bool64/godogx v0.1.1/go.mod h1:qydmzRfimgYTmNEvpnc+SJNkmdjpPoPavYQoSn2rjoY=
 github.com/bool64/httpmock v0.1.1 h1:jpqM0S8efvJfN7Uy5fBUJKu2C640/ZS0yboxpeyVwm0=
