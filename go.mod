@@ -7,7 +7,7 @@ require (
 	github.com/bool64/brick v0.0.10
 	github.com/bool64/cache v0.2.7
 	github.com/bool64/ctxd v1.1.3
-	github.com/bool64/dev v0.2.17
+	github.com/bool64/dev v0.2.18
 	github.com/bool64/httptestbench v0.1.4
 	github.com/bool64/sqluct v0.1.9
 	github.com/bool64/stats v0.2.2
@@ -89,7 +89,6 @@ require (
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/shurcooL/httpgzip v0.0.0-20190720172056-320755c1c1b0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/objx v0.4.0 // indirect
 	github.com/swaggest/assertjson v1.7.0 // indirect
 	github.com/swaggest/form/v5 v5.0.1 // indirect
 	github.com/swaggest/jsonschema-go v0.3.35 // indirect
