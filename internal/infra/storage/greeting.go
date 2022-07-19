@@ -78,10 +78,18 @@ func (gs *GreetingSaver) ClearGreetings(ctx context.Context) (int, error) {
 
 // GreetingMaker implements service provider.
 func (gs *GreetingSaver) GreetingMaker() greeting.Maker {
+	if gs == nil {
+		panic("empty GreetingSaver")
+	}
+
 	return gs
 }
 
 // GreetingClearer implements service provider.
 func (gs *GreetingSaver) GreetingClearer() greeting.Clearer {
+	if gs == nil {
+		panic("empty GreetingSaver")
+	}
+
 	return gs
 }

@@ -45,5 +45,9 @@ func (s *SimpleMaker) Hello(ctx context.Context, params Params) (string, error) 
 
 // GreetingMaker implements service provider.
 func (s *SimpleMaker) GreetingMaker() Maker {
+	if s == nil {
+		panic("empty SimpleMaker")
+	}
+
 	return s
 }
