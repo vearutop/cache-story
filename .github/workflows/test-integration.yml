@@ -18,8 +18,12 @@ env:
   DOCKER_COMPOSE_FILE: ./docker-compose.yml
   GO_VERSION: 1.18.x
   TARGET_DELTA_COV: 90     # Target coverage of changed lines, in percents
+  GODOG_ALLURE: "on"
+  ALLURE_ENV_TICKET: ${{ github.event.pull_request.title }}
+  ALLURE_ENV_PULL_REQUEST_URL: https://github.com/vearutop/cache-story/pull/${{github.event.issue.number}}
+  ALLURE_ENV_APP: cache-story
 jobs:
-  test:
+  test-integration:
     runs-on: ubuntu-latest
     steps:
       - name: Install Go stable
@@ -27,6 +31,7 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
+
       - name: Install Go tip
         if: env.GO_VERSION == 'tip'
         run: |
@@ -75,7 +80,7 @@ jobs:
       - name: Test
         id: test
         run: |
-          make test-integration
+          set -o pipefail && make test-integration || echo "::set-output name=failed::true" | tee integration_test.txt
           go tool cover -func=./integration.coverprofile > integration.txt
           TOTAL=$(grep 'total:' integration.txt)
           echo "${TOTAL}"
@@ -109,6 +114,9 @@ jobs:
           header: integration-test
           message: |
             ### Integration Test Coverage
+
+            [Allure report](https://vearutop.github.io/cache-story/${{ github.run_number }}/).
+
             ${{ steps.test.outputs.total }}
             ${{ steps.annotate.outputs.total }}
             <details><summary>Coverage of changed lines</summary>
@@ -126,3 +134,35 @@ jobs:
       - name: Store base coverage
         if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
         run: cp integration.txt integration-base.txt
+
+      - name: Checkout gh-pages
+        continue-on-error: true
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate allure report
+        continue-on-error: true
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 50
+
+      - name: Deploy allure report to Github Pages
+        continue-on-error: true
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: allure-history
+
+      - name: Check test result
+        if: ${{ steps.test.outputs.failed }} == 'true'
+        run: |
+          echo "::error ::Test failed"
+          cat integration_test.txt
+          exit 1
