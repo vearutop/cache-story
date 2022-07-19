@@ -24,6 +24,10 @@ type GreetingMaker struct {
 
 // GreetingMaker is a service provider.
 func (g *GreetingMaker) GreetingMaker() greeting.Maker {
+	if g == nil {
+		panic("empty GreetingMaker")
+	}
+
 	return g
 }
 

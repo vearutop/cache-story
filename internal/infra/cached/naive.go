@@ -33,6 +33,10 @@ func NewNaiveGreetingMaker(upstream greeting.Maker, ttl time.Duration, stats sta
 }
 
 func (g *NaiveGreetingMaker) GreetingMaker() greeting.Maker {
+	if g == nil {
+		panic("empty NaiveGreetingMaker")
+	}
+
 	return g
 }
 
