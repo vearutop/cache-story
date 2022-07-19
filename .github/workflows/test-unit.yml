@@ -129,10 +129,3 @@ jobs:
       - name: Store base coverage
         if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
         run: cp unit.txt unit-base.txt
-
-      - name: Upload code coverage
-        if: matrix.go-version == env.COV_GO_VERSION
-        uses: codecov/codecov-action@v1
-        with:
-          file: ./unit.coverprofile
-          flags: unittests
