@@ -1,4 +1,4 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Tue Jul 19 11:04:31 GMT 2022","Tue Jul 19 11:04:31 GMT 2022","72","","cache-story-integration-test","","","","Happy path.","features/Hello.feature"
-"failed","Tue Jul 19 11:04:31 GMT 2022","Tue Jul 19 11:04:31 GMT 2022","26","","cache-story-integration-test","","","","Buggy path.","features/Hello.feature"
-"failed","Tue Jul 19 11:04:31 GMT 2022","Tue Jul 19 11:04:31 GMT 2022","23","","cache-story-integration-test","","","","Unhappy path.","features/Hello.feature"
+"failed","Wed Jul 20 11:24:04 GMT 2022","Wed Jul 20 11:24:04 GMT 2022","27","","cache-story-integration-test","","","","Unhappy path.","features/Hello.feature"
+"failed","Wed Jul 20 11:24:04 GMT 2022","Wed Jul 20 11:24:04 GMT 2022","28","","cache-story-integration-test","","","","Buggy path.","features/Hello.feature"
+"passed","Wed Jul 20 11:24:04 GMT 2022","Wed Jul 20 11:24:04 GMT 2022","76","","cache-story-integration-test","","","","Happy path.","features/Hello.feature"
