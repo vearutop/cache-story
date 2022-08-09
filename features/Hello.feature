@@ -20,7 +20,7 @@ Feature: Hello, World!
     Then I should have response with body
     """
     {
-     "status":"INVALID_ARGUMENT","error":"--invalid argument: validation failed",
+     "status":"INVALID_ARGUMENT","error":"invalid argument: validation failed",
      "context":{"query:locale":["#: value must be one of \"en-US\", \"ru-RU\""]}
     }
     """
@@ -34,7 +34,7 @@ Feature: Hello, World!
     Then I should have response with body
     """
     {
-     "error":"-----#$@@^! %C 🤖",
+     "error":"#$@@^! %C 🤖",
      "context":{"trace.id":"<ignore-diff>","transaction.id":"<ignore-diff>"}
     }
     """
