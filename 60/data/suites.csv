@@ -1,0 +1,4 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Thu Sep 22 15:00:21 GMT 2022","Thu Sep 22 15:00:21 GMT 2022","33","","cache-story-integration-test","","","","Unhappy path.","features/Hello.feature"
+"passed","Thu Sep 22 15:00:21 GMT 2022","Thu Sep 22 15:00:21 GMT 2022","15","","cache-story-integration-test","","","","Buggy path.","features/Hello.feature"
+"passed","Thu Sep 22 15:00:21 GMT 2022","Thu Sep 22 15:00:21 GMT 2022","47","","cache-story-integration-test","","","","Happy path.","features/Hello.feature"
