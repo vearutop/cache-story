@@ -39,6 +39,10 @@ linters:
     - ireturn
     - exhaustruct
     - nonamedreturns
+    - nosnakecase
+    - structcheck
+    - varcheck
+    - deadcode
 
 issues:
   exclude-use-default: false
@@ -50,5 +54,12 @@ issues:
         - noctx
         - funlen
         - dupl
+        - structcheck
+        - unused
+        - unparam
+        - nosnakecase
       path: "_test.go"
+    - linters:
+        - errcheck # Error checking omitted for brevity.
+      path: "example_"
 
