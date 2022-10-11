@@ -1,3 +1,4 @@
+// Package main provides cache-story web service.
 package main
 
 import (

@@ -37,7 +37,7 @@ func (gs *GreetingSaver) Hello(ctx context.Context, params greeting.Params) (str
 	q := gs.Storage.InsertStmt(GreetingsTable, GreetingRow{
 		Message:   g,
 		CreatedAt: time.Now(),
-	}).Options("IGNORE")
+	}, sqluct.InsertIgnore)
 
 	if _, err = gs.Storage.Exec(ctx, q); err != nil {
 		return "", ctxd.WrapError(ctx, err, "failed to store greeting")
@@ -73,6 +73,7 @@ func (gs *GreetingSaver) ClearGreetings(ctx context.Context) (int, error) {
 	}
 
 	aff, err := res.RowsAffected()
+
 	return int(aff), err
 }
 

@@ -1,3 +1,4 @@
+// Package main provides custom pocket load tester tool.
 package main
 
 import (

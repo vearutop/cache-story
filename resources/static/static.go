@@ -6,5 +6,6 @@ import (
 )
 
 // Assets provides embedded static assets for web application.
+//
 //go:embed *
 var Assets embed.FS
