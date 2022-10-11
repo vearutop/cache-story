@@ -10,6 +10,7 @@ import (
 	"github.com/vearutop/cache-story/internal/domain/greeting"
 )
 
+// NaiveGreetingMaker produces simple greetings.
 type NaiveGreetingMaker struct {
 	mu       sync.RWMutex
 	ttl      time.Duration
@@ -23,6 +24,7 @@ type greetingEntry struct {
 	expires time.Time
 }
 
+// NewNaiveGreetingMaker creates naive greeting maker.
 func NewNaiveGreetingMaker(upstream greeting.Maker, ttl time.Duration, stats stats.Tracker) *NaiveGreetingMaker {
 	return &NaiveGreetingMaker{
 		ttl:      ttl,
@@ -32,6 +34,7 @@ func NewNaiveGreetingMaker(upstream greeting.Maker, ttl time.Duration, stats sta
 	}
 }
 
+// GreetingMaker is a service provider.
 func (g *NaiveGreetingMaker) GreetingMaker() greeting.Maker {
 	if g == nil {
 		panic("empty NaiveGreetingMaker")
@@ -40,6 +43,7 @@ func (g *NaiveGreetingMaker) GreetingMaker() greeting.Maker {
 	return g
 }
 
+// Hello makes greeting.
 func (g *NaiveGreetingMaker) Hello(ctx context.Context, params greeting.Params) (string, error) {
 	g.mu.RLock()
 	val, found := g.data[params]
@@ -60,6 +64,7 @@ func (g *NaiveGreetingMaker) Hello(ctx context.Context, params greeting.Params) 
 		gr, err := g.upstream.Hello(ctx, params)
 		if err != nil {
 			g.stats.Add(ctx, cache.MetricFailed, 1, "name", "greetings-naive")
+
 			return gr, err
 		}
 

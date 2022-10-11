@@ -2,18 +2,22 @@ package infra
 
 import (
 	"context"
+	"io/fs"
 	"time"
 
 	"github.com/bool64/brick"
 	"github.com/bool64/brick/database"
 	"github.com/bool64/brick/jaeger"
-	"github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" // MySQL driver.
 	"github.com/swaggest/rest/response/gzip"
 	"github.com/vearutop/cache-story/internal/domain/greeting"
 	"github.com/vearutop/cache-story/internal/infra/cached"
 	"github.com/vearutop/cache-story/internal/infra/schema"
 	"github.com/vearutop/cache-story/internal/infra/service"
 	"github.com/vearutop/cache-story/internal/infra/storage"
+	"github.com/vearutop/cache-story/internal/infra/storage/mysql"
+	"github.com/vearutop/cache-story/internal/infra/storage/sqlite"
+	_ "modernc.org/sqlite" // SQLite3 driver.
 )
 
 // NewServiceLocator creates application service locator.
@@ -67,17 +71,23 @@ func NewServiceLocator(cfg service.Config) (loc *service.Locator, err error) {
 }
 
 func setupStorage(l *service.Locator, cfg database.Config) error {
-	c, err := mysql.ParseDSN(cfg.DSN)
-	if err != nil {
-		return err
+	if cfg.DriverName == "" {
+		cfg.DriverName = "mysql"
 	}
 
-	conn, err := mysql.NewConnector(c)
-	if err != nil {
-		return err
+	var (
+		err        error
+		migrations fs.FS
+	)
+
+	switch cfg.DriverName {
+	case "sqlite":
+		migrations = sqlite.Migrations
+	case "mysql":
+		migrations = mysql.Migrations
 	}
 
-	l.Storage, err = database.SetupStorage(cfg, l.CtxdLogger(), l.StatsTracker(), "mysql", conn, storage.Migrations)
+	l.Storage, err = database.SetupStorageDSN(cfg, l.CtxdLogger(), l.StatsTracker(), migrations)
 	if err != nil {
 		return err
 	}

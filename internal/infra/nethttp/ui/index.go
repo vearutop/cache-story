@@ -13,7 +13,7 @@ import (
 // Static serves static assets.
 var Static http.Handler
 
-// nolint:gochecknoinits
+//nolint:gochecknoinits
 func init() {
 	if _, err := os.Stat("./resources/static"); err == nil {
 		// path/to/whatever exists
