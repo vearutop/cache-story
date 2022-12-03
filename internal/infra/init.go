@@ -2,6 +2,8 @@ package infra
 
 import (
 	"context"
+	"github.com/bool64/cache"
+	"github.com/bool64/cache/arena"
 	"io/fs"
 	"time"
 
@@ -58,8 +60,22 @@ func NewServiceLocator(cfg service.Config) (loc *service.Locator, err error) {
 
 	if cfg.Cache == "naive" {
 		l.GreetingMakerProvider = cached.NewNaiveGreetingMaker(l.GreetingMaker(), 3*time.Minute, l.StatsTracker())
+	} else if cfg.Cache == "arena" {
+		greetingsCache := brick.MakeCacheOf[string](l.BaseLocator, "greetings", 30*time.Minute, func(cfg *cache.FailoverConfigOf[string]) {
+			cfg.Backend = arena.NewShardedMapOf[string](func(cfg *cache.Config) {
+				cfg.Name = "greetings"
+				cfg.Logger = l.CtxdLogger()
+				cfg.Stats = l.StatsTracker()
+				cfg.TimeToLive = 30 * time.Minute
+			})
+		})
+		l.GreetingMakerProvider = cached.NewGreetingMaker(l.GreetingMaker(), greetingsCache)
+
+		if err := l.TransferCache(context.Background()); err != nil {
+			l.CtxdLogger().Warn(context.Background(), "failed to transfer cache", "error", err)
+		}
 	} else if cfg.Cache == "advanced" {
-		greetingsCache := brick.MakeCacheOf[string](l.BaseLocator, "greetings", 3*time.Minute)
+		greetingsCache := brick.MakeCacheOf[string](l.BaseLocator, "greetings", 30*time.Minute)
 		l.GreetingMakerProvider = cached.NewGreetingMaker(l.GreetingMaker(), greetingsCache)
 
 		if err := l.TransferCache(context.Background()); err != nil {

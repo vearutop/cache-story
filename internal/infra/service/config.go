@@ -13,7 +13,7 @@ const Name = "cache-story"
 type Config struct {
 	brick.BaseConfig
 
-	Cache string `split_words:"true" default:"advanced" enum:"none,naive,advanced"`
+	Cache string `split_words:"true" default:"advanced" enum:"none,naive,advanced,arena"`
 
 	Database database.Config `split_words:"true"`
 	Jaeger   jaeger.Config   `split_words:"true"`
