@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
 	github.com/bool64/brick v0.1.15
-	github.com/bool64/cache v0.2.8-0.20221202164716-7e19185b8b1f
+	github.com/bool64/cache v0.4.1-0.20221214001050-cfff8bfe6db9
 	github.com/bool64/ctxd v1.2.0
 	github.com/bool64/dev v0.2.22
 	github.com/bool64/httptestbench v0.1.4
@@ -38,7 +38,7 @@ require (
 	github.com/bool64/prom-stats v0.1.3 // indirect
 	github.com/bool64/shared v0.1.5 // indirect
 	github.com/bool64/zapctxd v1.0.0 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/cucumber/gherkin-go/v19 v19.0.3 // indirect
 	github.com/cucumber/godog v0.12.5 // indirect
 	github.com/cucumber/messages-go/v16 v16.0.1 // indirect

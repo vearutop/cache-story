@@ -70,8 +70,8 @@ github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kB
 github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJmJgSg28kpZDP6UIiPt0e0Oz0kqKNGyRaWEPv84=
 github.com/bool64/brick v0.1.15 h1:rrqdTKSI76N2cGfECdnBd1ygYPFr9lEC+2zwC6/SGdM=
 github.com/bool64/brick v0.1.15/go.mod h1:ipfowpeBjxy647FKiVesoojNdeURlOdouBALrA8QQFQ=
-github.com/bool64/cache v0.2.8-0.20221202164716-7e19185b8b1f h1:YH0t2Rwkb7vyKVZcUlp0PDkx9mVhtY1Gm35tvhpyf88=
-github.com/bool64/cache v0.2.8-0.20221202164716-7e19185b8b1f/go.mod h1:n2aqfV1JZZv31Qu28gnU0MwX8xsGibBJNlVWgvrg9hE=
+github.com/bool64/cache v0.4.1-0.20221214001050-cfff8bfe6db9 h1:E4VJiNemdREuI4LDcXZeArafwMFIN80qkLDgLGpahg8=
+github.com/bool64/cache v0.4.1-0.20221214001050-cfff8bfe6db9/go.mod h1:4/Vqvgqtbf3ul/k9Q6S5+dC3/AzNNm/A5E8MOK/KqbE=
 github.com/bool64/ctxd v1.0.0/go.mod h1:+rjDVFNOJeO+xlvMqQfG0p53CzuRB7FhPSo5nWSkpQ0=
 github.com/bool64/ctxd v1.2.0 h1:x/ObTZswHT7TNJdQcPWw6YplnZ3oRyFZ+i+YqDb9Ib4=
 github.com/bool64/ctxd v1.2.0/go.mod h1:cSMhQNUcfu8XZRAUSrrFZhNd4DzK6LFN3DR5yeGW74o=
@@ -109,8 +109,9 @@ github.com/bool64/zapctxd v1.0.0/go.mod h1:ch+Rpq/NC2cGbCdFw4P0l8sEHIbViVaseTH39
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/cespare/xxhash/v2 v2.1.1/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
-github.com/cespare/xxhash/v2 v2.1.2 h1:YRXhKfTDauu4ajMg1TPgFO5jnlC2HCbmLXMcTG5cbYE=
 github.com/cespare/xxhash/v2 v2.1.2/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
+github.com/cespare/xxhash/v2 v2.2.0 h1:DC2CZ1Ep5Y4k3ZQ899DldepgrayRUGE6BBZ/cd9Cj44=
+github.com/cespare/xxhash/v2 v2.2.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=

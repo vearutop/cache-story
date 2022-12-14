@@ -28,6 +28,7 @@ ifeq ($(DEVGO_PATH),)
 endif
 
 RELEASE_TARGETS ?= linux/amd64
+export GOEXPERIMENT ?= arenas
 
 -include $(DEVGO_PATH)/makefiles/main.mk
 -include $(DEVGO_PATH)/makefiles/lint.mk

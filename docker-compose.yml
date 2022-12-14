@@ -1,20 +1,20 @@
 version: "2.4" # Version 2 allows health checking outside of docker stack.
 
 services:
-  database:
-    platform: linux/x86_64
-    image: mysql:5.7
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: db
-    healthcheck:
-      test: "/usr/bin/mysql --user=root --password=secret --execute \"SHOW DATABASES;\""
-      interval: 1s
-      timeout: 3s
-      retries: 30
-
+#  database:
+#    platform: linux/x86_64
+#    image: mysql:5.7
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: secret
+#      MYSQL_DATABASE: db
+#    healthcheck:
+#      test: "/usr/bin/mysql --user=root --password=secret --execute \"SHOW DATABASES;\""
+#      interval: 1s
+#      timeout: 3s
+#      retries: 30
+#
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -41,8 +41,8 @@ services:
       - "16686:16686"
 
   # Waiter blocks until required services are up.
-  waiter:
-    depends_on:
-      database:
-        condition: service_healthy
-    image: busybox
+#  waiter:
+#    depends_on:
+#      database:
+#        condition: service_healthy
+#    image: busybox
