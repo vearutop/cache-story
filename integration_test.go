@@ -22,6 +22,8 @@ import (
 func TestFeatures(t *testing.T) {
 	var cfg service.Config
 
+	
+	
 	test.RunFeatures(t, "", &cfg, func(tc *test.Context) (*brick.BaseLocator, http.Handler) {
 		cfg.ServiceName = service.Name
 
