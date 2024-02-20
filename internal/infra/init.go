@@ -2,21 +2,18 @@ package infra
 
 import (
 	"context"
-	"github.com/bool64/cache"
-	"github.com/bool64/cache/arena"
 	"io/fs"
 	"time"
 
 	"github.com/bool64/brick"
 	"github.com/bool64/brick/database"
 	"github.com/bool64/brick/jaeger"
+	"github.com/bool64/cache"
 	_ "github.com/go-sql-driver/mysql" // MySQL driver.
-	"github.com/swaggest/rest/response/gzip"
 	"github.com/vearutop/cache-story/internal/domain/greeting"
 	"github.com/vearutop/cache-story/internal/infra/cached"
 	"github.com/vearutop/cache-story/internal/infra/schema"
 	"github.com/vearutop/cache-story/internal/infra/service"
-	"github.com/vearutop/cache-story/internal/infra/storage"
 	"github.com/vearutop/cache-story/internal/infra/storage/mysql"
 	"github.com/vearutop/cache-story/internal/infra/storage/sqlite"
 	_ "modernc.org/sqlite" // SQLite3 driver.
@@ -43,20 +40,32 @@ func NewServiceLocator(cfg service.Config) (loc *service.Locator, err error) {
 
 	schema.SetupOpenapiCollector(l.OpenAPI)
 
-	l.HTTPServerMiddlewares = append(l.HTTPServerMiddlewares, gzip.Middleware)
+	// l.HTTPServerMiddlewares = append(l.HTTPServerMiddlewares, gzip.Middleware)
 
 	if err = setupStorage(l, cfg.Database); err != nil {
 		return nil, err
 	}
 
-	gs := &storage.GreetingSaver{
-		Upstream: &greeting.SimpleMaker{},
-		Storage:  l.Storage,
-		Stats:    l.StatsTracker(),
-	}
+	//gs := &storage.GreetingSaver{
+	//	Upstream: &greeting.SimpleMaker{},
+	//	Storage:  l.Storage,
+	//	Stats:    l.StatsTracker(),
+	//}
+
+	gs := &greeting.SimpleMaker{}
 
 	l.GreetingMakerProvider = gs
-	l.GreetingClearerProvider = gs
+	// l.GreetingClearerProvider = gs
+
+	go func() {
+		a := []int{}
+		for {
+			for i := 0; i < 10000; i++ {
+				a = append(a, 123)
+			}
+			time.Sleep(time.Second)
+		}
+	}()
 
 	if cfg.Cache == "naive" {
 		l.GreetingMakerProvider = cached.NewNaiveGreetingMaker(l.GreetingMaker(), 3*time.Minute, l.StatsTracker())
@@ -75,7 +84,17 @@ func NewServiceLocator(cfg service.Config) (loc *service.Locator, err error) {
 			l.CtxdLogger().Warn(context.Background(), "failed to transfer cache", "error", err)
 		}
 	} else if cfg.Cache == "advanced" {
-		greetingsCache := brick.MakeCacheOf[string](l.BaseLocator, "greetings", 30*time.Minute)
+		greetingsCache := brick.MakeCacheOf[string](l.BaseLocator, "greetings", 30*time.Minute, func(cfg *cache.FailoverConfigOf[string]) {
+			cfg.Backend = cache.NewShardedMapOf[string](func(cfg *cache.Config) {
+				cfg.Name = "greetings"
+				cfg.Logger = l.CtxdLogger()
+				cfg.Stats = l.StatsTracker()
+				cfg.TimeToLive = cache.UnlimitedTTL
+				cfg.DeleteExpiredJobInterval = 30 * time.Second
+				cfg.HeapInUseSoftLimit = 100 * 1024 * 1024
+				// cfg.SysMemSoftLimit = 100 * 1024 * 1024
+			})
+		})
 		l.GreetingMakerProvider = cached.NewGreetingMaker(l.GreetingMaker(), greetingsCache)
 
 		if err := l.TransferCache(context.Background()); err != nil {

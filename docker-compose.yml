@@ -40,6 +40,15 @@ services:
       - "6831:6831/udp"
       - "16686:16686"
 
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    env_file:
+#      - .env
+#    ports:
+#      - 8019:8018
+
   # Waiter blocks until required services are up.
 #  waiter:
 #    depends_on:

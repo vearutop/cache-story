@@ -29,6 +29,7 @@ endif
 
 RELEASE_TARGETS ?= linux/amd64
 export GOEXPERIMENT ?= arenas
+export GODEBUG=madvdontneed=1
 
 -include $(DEVGO_PATH)/makefiles/main.mk
 -include $(DEVGO_PATH)/makefiles/lint.mk

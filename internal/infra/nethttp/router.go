@@ -4,6 +4,7 @@ package nethttp
 import (
 	"net/http"
 
+	"github.com/arl/statsviz"
 	"github.com/bool64/brick"
 	"github.com/vearutop/cache-story/internal/infra/nethttp/ui"
 	"github.com/vearutop/cache-story/internal/infra/service"
@@ -16,9 +17,18 @@ func NewRouter(deps *service.Locator) http.Handler {
 
 	r.Get("/hello", usecase.HelloWorld(deps))
 	r.Delete("/hello", usecase.Clear(deps))
+	r.Post("/hello", usecase.Fill(deps))
 
 	r.Method(http.MethodGet, "/", ui.Index())
 	r.Mount("/static/", http.StripPrefix("/static", ui.Static))
+
+	mux := http.NewServeMux()
+	_ = statsviz.Register(mux)
+
+	deps.DebugRouter.Mount("/statsviz", mux)
+
+	// r.Mount("/debug/statsviz", statsviz.Index)
+	// r.Mount("/debug/statsviz/ws", statsviz.NewWsHandler(time.Second))
 
 	return r
 }

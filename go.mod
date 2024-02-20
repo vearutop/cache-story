@@ -4,10 +4,11 @@ go 1.18
 
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
+	github.com/arl/statsviz v0.5.1
 	github.com/bool64/brick v0.1.15
-	github.com/bool64/cache v0.4.1-0.20221214001050-cfff8bfe6db9
-	github.com/bool64/ctxd v1.2.0
-	github.com/bool64/dev v0.2.22
+	github.com/bool64/cache v0.4.2
+	github.com/bool64/ctxd v1.2.1
+	github.com/bool64/dev v0.2.33
 	github.com/bool64/httptestbench v0.1.4
 	github.com/bool64/sqluct v0.1.10
 	github.com/bool64/stats v0.2.2
@@ -57,6 +58,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/pprof v0.0.0-20221203041831-ce31453925ec // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-memdb v1.3.3 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
@@ -133,3 +135,7 @@ require (
 	modernc.org/strutil v1.1.3 // indirect
 	modernc.org/token v1.0.1 // indirect
 )
+
+replace github.com/bool64/cache => /Users/vearutop/gohack/github.com/bool64/cache
+
+replace github.com/arl/statsviz => /Users/vearutop/gohack/github.com/arl/statsviz
