@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
-	github.com/bool64/brick v0.2.4
+	github.com/bool64/brick v0.2.5
 	github.com/bool64/cache v0.4.7
 	github.com/bool64/ctxd v1.2.1
 	github.com/bool64/dev v0.2.34

@@ -14,7 +14,7 @@ import (
 func main() {
 	var cfg service.Config
 
-	brick.Start(&cfg, func(docsMode bool) (*brick.BaseLocator, http.Handler) {
+	brick.Start(&cfg, func(_ bool) (*brick.BaseLocator, http.Handler) {
 		// Initialize application resources.
 		sl, err := infra.NewServiceLocator(cfg)
 		if err != nil {

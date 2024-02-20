@@ -22,7 +22,7 @@ func main() {
 	kingpin.Flag("cardinality", "Number of different urls to send.").Default("1000").IntVar(&cardinality)
 	kingpin.Flag("group", "Number of sequential requests to group in single URL.").Default("10").IntVar(&group)
 
-	curl.AddCommand(&lf, func(lf *loadgen.Flags, f *nethttp.Flags, j loadgen.JobProducer) {
+	curl.AddCommand(&lf, func(_ *loadgen.Flags, _ *nethttp.Flags, j loadgen.JobProducer) {
 		if nj, ok := j.(*nethttp.JobProducer); ok {
 			nj.PrepareRequest = func(i int, req *http.Request) error {
 				k := i / group

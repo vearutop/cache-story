@@ -22,8 +22,8 @@ import (
 func TestFeatures(t *testing.T) {
 	var cfg service.Config
 
-	
-	
+	// require.NoError(t, config.Load("", &cfg, config.WithOptionalEnvFiles(".env.sqlite")))
+
 	test.RunFeatures(t, "", &cfg, func(tc *test.Context) (*brick.BaseLocator, http.Handler) {
 		cfg.ServiceName = service.Name
 
@@ -67,7 +67,7 @@ func BenchmarkGreetings(b *testing.B) {
 		func(i int, req *fasthttp.Request) {
 			req.SetRequestURI(srv.URL + "/hello?locale=en-US&name=user" + strconv.Itoa(((i/10)^12345)%100))
 		},
-		func(i int, resp *fasthttp.Response) bool {
+		func(_ int, resp *fasthttp.Response) bool {
 			return resp.StatusCode() == http.StatusOK
 		},
 	)
@@ -100,7 +100,7 @@ func BenchmarkGreetingsSQLite(b *testing.B) {
 		func(i int, req *fasthttp.Request) {
 			req.SetRequestURI(srv.URL + "/hello?locale=en-US&name=user" + strconv.Itoa(((i/10)^12345)%100))
 		},
-		func(i int, resp *fasthttp.Response) bool {
+		func(_ int, resp *fasthttp.Response) bool {
 			return resp.StatusCode() == http.StatusOK
 		},
 	)
