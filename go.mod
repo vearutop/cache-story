@@ -4,10 +4,10 @@ go 1.21
 
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
-	github.com/bool64/brick v0.2.3
+	github.com/bool64/brick v0.2.4
 	github.com/bool64/cache v0.4.7
 	github.com/bool64/ctxd v1.2.1
-	github.com/bool64/dev v0.2.33
+	github.com/bool64/dev v0.2.34
 	github.com/bool64/httptestbench v0.1.4
 	github.com/bool64/sqluct v0.2.1
 	github.com/bool64/stats v0.2.2
@@ -41,7 +41,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/cucumber/gherkin/go/v26 v26.2.0 // indirect
-	github.com/cucumber/godog v0.13.0 // indirect
+	github.com/cucumber/godog v0.14.0 // indirect
 	github.com/cucumber/messages/go/v21 v21.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
@@ -52,7 +52,7 @@ require (
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/godogx/allure v0.2.3 // indirect
-	github.com/godogx/httpsteps v0.2.13 // indirect
+	github.com/godogx/httpsteps v0.2.14 // indirect
 	github.com/godogx/resource v0.1.1 // indirect
 	github.com/godogx/vars v0.1.7 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
