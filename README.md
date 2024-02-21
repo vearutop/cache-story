@@ -115,7 +115,70 @@ When multiple callers simultaneously miss the same key, they will all try to bui
 Additionally, there will be extra latency for all the callers that would try to build the value.
 If some of those builds fail, parent callers will fail even though there might be a valid value in the cache.
 
-![Naive Cache Diagram](./resources/screenshots/naive-cache.png)
+```mermaid
+sequenceDiagram
+
+Client ->>+ Server : Request1 (needs Key1)
+Server ->>+ CachedFinder : Key1
+CachedFinder ->>+ CacheData : Find Key1
+CacheData ->>+ CachedFinder : Key1 not found
+
+Note right of CacheData: builds in progress: 0
+
+CachedFinder ->>+ SlowOrigin : Key1
+
+Note right of CacheData: first request starts the build<br/>builds in progress: 1
+
+Client ->>+ Server : Request2 (needs Key1 too)
+Server ->>+ CachedFinder : Key1
+CachedFinder ->>+ CacheData : Find Key1
+CacheData ->>+ CachedFinder : Key1 not found
+CachedFinder ->>+ SlowOrigin : Key1
+
+Note right of CacheData: first build is still in progress,<br/>cached value is missing,<br/>so second request starts the build<br/>builds in progress: 2
+
+Client ->>+ Server : Request3 (needs Key1 too)
+Server ->>+ CachedFinder : Key1
+CachedFinder ->>+ CacheData : Find Key1
+CacheData ->>+ CachedFinder : Key1 not found
+CachedFinder ->>+ SlowOrigin : Key1
+
+Note right of CacheData: first and second builds are still in progress,<br/>cached value is missing,<br/>so third request starts the build<br/>builds in progress: 3
+
+SlowOrigin ->>+ CachedFinder : Value1 (initiated by Request1)
+
+Note right of CacheData: first build is complete,<br/>cached value is stored,<br/>but other builds are still in progress<br/>builds in progress: 2
+
+CachedFinder ->>+ CacheData : Store Key1 : Value1
+CachedFinder ->>+ Server : Value1
+Server ->>+ Client : Response1 (with Value1)
+
+SlowOrigin ->>+ CachedFinder : Error (initiated by Request3)
+
+Note right of CacheData: third build quickly failed,<br/>request is not served even though<br/>cache has a valid value at this point<br/>builds in progress: 1
+
+CachedFinder ->>+ Server : Error
+Server ->>+ Client : Response3 (with Error)
+
+SlowOrigin ->>+ CachedFinder : Value1 (initiated by Request2)
+
+Note right of CacheData: second build is complete,<br/>cached value overwrites same valid value,<br/>request is served with extra delay from the first build,<br/>builds in progress: 0
+
+CachedFinder ->>+ CacheData : Store Key1 : Value1
+CachedFinder ->>+ Server : Value1
+Server ->>+ Client : Response2 (with Value1)
+
+Client ->>+ Server : Request4 (needs Key1)
+Server ->>+ CachedFinder : Key1
+CachedFinder ->>+ CacheData : Find Key1
+
+Note right of CacheData: cached value is immediately served to subsequent requests<br/>builds in progress: 0
+
+CacheData ->>+ CachedFinder : Value1
+CachedFinder ->>+ Server : Value1
+Server ->>+ Client : Response4 (with Value1)
+
+```
 
 The issue can be simulated by using low cardinality with high grouping, so that many similar requests are sent at once.
 
@@ -131,7 +194,65 @@ The solution could be to block parallel builds, so that only one build is in pro
 
 A better solution is to lock the builds per key, so that one of the callers acquires the lock and owns the build, while all the others wait for the value.
 
-![Locked Cache Diagram](./resources/screenshots/failover-cache.png)
+```mermaid
+sequenceDiagram
+
+Client ->>+ Server : Request1 (needs Key1)
+Server ->>+ CachedFinder : Key1
+CachedFinder ->>+ FailoverCache : Get Key1 or build
+FailoverCache ->>+ FailoverCache : Key1 not found
+FailoverCache ->>+ FailoverCache : Acquire Key1 lock and build
+
+Note right of FailoverCache: builds in progress: 0
+
+FailoverCache ->>+ SlowOrigin : Key1
+
+Note right of FailoverCache: first request starts the exclusive build<br/>builds in progress: 1
+
+Client ->>+ Server : Request2 (needs Key1 too)
+Server ->>+ CachedFinder : Key1
+CachedFinder ->>+ FailoverCache : Get Key1 or build
+FailoverCache ->>+ FailoverCache : Block on Key1 lock
+
+Note right of FailoverCache: consecutive requests wait for the build to finish<br/>builds in progress: 1
+
+Client ->>+ Server : Request3 (needs Key1 too)
+Server ->>+ CachedFinder : Key1
+CachedFinder ->>+ FailoverCache : Get Key1 or build
+FailoverCache ->>+ FailoverCache : Block on Key1 lock
+
+Note right of FailoverCache: builds in progress: 1
+
+
+SlowOrigin ->>+ FailoverCache : Value1 (initiated by Request1)
+
+Note right of FailoverCache: once build is complete, the value is stored<br/>and returned to all blocked requests<br/>builds in progress: 0
+
+FailoverCache ->>+ FailoverCache : Store Key1 : Value1
+FailoverCache ->>+ FailoverCache : Release Key1 lock
+
+FailoverCache ->>+ CachedFinder : Value1
+CachedFinder ->>+ Server : Value1
+Server ->>+ Client : Response1 (with Value1)
+
+FailoverCache ->>+ CachedFinder : Value1
+CachedFinder ->>+ Server : Value1
+Server ->>+ Client : Response2 (with Value1)
+
+FailoverCache ->>+ CachedFinder : Value1
+CachedFinder ->>+ Server : Value1
+Server ->>+ Client : Response3 (with Value1)
+
+Client ->>+ Server : Request4 (needs Key1 too)
+Server ->>+ CachedFinder : Key1
+CachedFinder ->>+ FailoverCache : Get Key1 or build
+FailoverCache ->>+ CachedFinder : Value1
+
+Note right of FailoverCache: cached value is immediately served to subsequent requests<br/>builds in progress: 0
+
+CachedFinder ->>+ Server : Value1
+Server ->>+ Client : Response4 (with Value1)
+```
 
 ### Background Updates
 
