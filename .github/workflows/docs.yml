@@ -3,6 +3,8 @@ on:
   push:
     tags:
       - v*
+  pull_request:
+
 env:
   GO111MODULE: "on"
 jobs:
@@ -31,10 +33,11 @@ jobs:
           make build
           ./bin/* -openapi > openapi.json
           cat ./openapi.json
+          mkdir confluence
       - name: Generate markdown docs
         uses: docker://swaggest/swac
         with:
-          args: /bin/sh -c "swac markdown ./openapi.json --add-schema-url openapi.json --out ./wiki/API-Docs.md;mv -f ./openapi.json ./wiki/openapi.json"
+          args: /bin/sh -c "swac markdown ./openapi.json --add-schema-url openapi.json --out ./wiki/API-Docs.md;swac markdown ./openapi.json --confluence --out ./confluence/API-Docs.md;mv -f ./openapi.json ./wiki/openapi.json"
       - name: Push to wiki
         run: |
           cd wiki
@@ -42,3 +45,12 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git diff-index --quiet HEAD || git commit -m "Add changes" && git push
+      - name: Publish Markdown to Confluence
+        uses: markdown-confluence/publish@v1
+        with:
+          confluenceBaseUrl: https://vearutop.atlassian.net/
+          confluenceParentId: 65538
+          folderToPublish: confluence
+          atlassianUserName: ${{ secrets.ATLASSIAN_USERNAME }}
+          atlassianApiToken: ${{ secrets.ATLASSIAN_API_TOKEN }}
+
