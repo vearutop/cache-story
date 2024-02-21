@@ -17,7 +17,7 @@ func Clear(deps interface {
 		Affected int `json:"affected"`
 	}
 
-	u := usecase.NewInteractor(func(ctx context.Context, in struct{}, out *clearOutput) error {
+	u := usecase.NewInteractor(func(ctx context.Context, _ struct{}, out *clearOutput) error {
 		affected, err := deps.GreetingClearer().ClearGreetings(ctx)
 
 		out.Affected = affected

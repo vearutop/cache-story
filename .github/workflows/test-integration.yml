@@ -16,22 +16,21 @@ env:
   GO111MODULE: "on"
   RUN_BASE_COVERAGE: "on"  # Runs test for PR base in case base test coverage is missing.
   DOCKER_COMPOSE_FILE: ./docker-compose.yml
-  GO_VERSION: 1.19.x
+  GO_VERSION: 1.22.x
   TARGET_DELTA_COV: 90     # Target coverage of changed lines, in percents
   GODOG_ALLURE: "on"
   ALLURE_ENV_TICKET: ${{ github.event.pull_request.title }}
   ALLURE_ENV_PULL_REQUEST_URL: https://github.com/vearutop/cache-story/pull/${{github.event.issue.number}}
   ALLURE_ENV_APP: cache-story
 jobs:
-  test-integration:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Install Go stable
         if: env.GO_VERSION != 'tip'
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
-
       - name: Install Go tip
         if: env.GO_VERSION == 'tip'
         run: |
@@ -43,10 +42,10 @@ jobs:
           echo "PATH=$HOME/go/bin:$HOME/sdk/gotip/bin/:$PATH" >> $GITHUB_ENV
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Go cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           # In order:
           # * Module download cache
@@ -80,33 +79,30 @@ jobs:
       - name: Test
         id: test
         run: |
-          echo "::set-output name=failed::false"
-          set -o pipefail && make test-integration || echo "::set-output name=failed::true" | tee integration_test.txt
+          make test-integration
           go tool cover -func=./integration.coverprofile > integration.txt
           TOTAL=$(grep 'total:' integration.txt)
           echo "${TOTAL}"
-          echo "::set-output name=total::$TOTAL"
+          echo "total<<EOF" >> $GITHUB_OUTPUT && echo "$TOTAL" >> $GITHUB_OUTPUT && echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Annotate missing test coverage
         id: annotate
         if: github.event.pull_request.base.sha != ''
         run: |
-          curl -sLO https://github.com/vearutop/gocovdiff/releases/download/v1.3.6/linux_amd64.tar.gz && tar xf linux_amd64.tar.gz
+          curl -sLO https://github.com/vearutop/gocovdiff/releases/download/v1.4.2/linux_amd64.tar.gz && tar xf linux_amd64.tar.gz && rm linux_amd64.tar.gz
           gocovdiff_hash=$(git hash-object ./gocovdiff)
-          [ "$gocovdiff_hash" == "8e507e0d671d4d6dfb3612309b72b163492f28eb" ] || (echo "::error::unexpected hash for gocovdiff, possible tampering: $gocovdiff_hash" && exit 1)
+          [ "$gocovdiff_hash" == "c37862c73a677e5a9c069470287823ab5bbf0244" ] || (echo "::error::unexpected hash for gocovdiff, possible tampering: $gocovdiff_hash" && exit 1)
           git fetch origin master ${{ github.event.pull_request.base.sha }}
           REP=$(./gocovdiff -cov integration.coverprofile -gha-annotations gha-integration.txt -delta-cov-file delta-cov-integration.txt -target-delta-cov ${TARGET_DELTA_COV})
           echo "${REP}"
-          REP="${REP//$'\n'/%0A}"
           cat gha-integration.txt
           DIFF=$(test -e integration-base.txt && ./gocovdiff -func-cov integration.txt -func-base-cov integration-base.txt || echo "Missing base coverage file")
-          DIFF="${DIFF//$'\n'/%0A}"
           TOTAL=$(cat delta-cov-integration.txt)
-          echo "::set-output name=rep::$REP"
-          echo "::set-output name=diff::$DIFF"
-          echo "::set-output name=total::$TOTAL"
+          echo "rep<<EOF" >> $GITHUB_OUTPUT && echo "$REP" >> $GITHUB_OUTPUT && echo "EOF" >> $GITHUB_OUTPUT
+          echo "diff<<EOF" >> $GITHUB_OUTPUT && echo "$DIFF" >> $GITHUB_OUTPUT && echo "EOF" >> $GITHUB_OUTPUT
+          echo "total<<EOF" >> $GITHUB_OUTPUT && echo "$TOTAL" >> $GITHUB_OUTPUT && echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Comment Test Coverage
+      - name: Comment test coverage
         continue-on-error: true
         if: github.event.pull_request.base.sha != ''
         uses: marocchino/sticky-pull-request-comment@v2
