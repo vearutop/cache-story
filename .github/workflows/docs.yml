@@ -47,7 +47,7 @@ jobs:
           git add .
           git diff-index --quiet HEAD || git commit -m "Add changes" && git push
       - name: Publish Markdown to Confluence
-        uses: markdown-confluence/publish-action@v5
+        uses: markdown-confluence/publish@v1
         with:
           confluenceBaseUrl: https://vearutop.atlassian.net
           confluenceParentId: 65538
