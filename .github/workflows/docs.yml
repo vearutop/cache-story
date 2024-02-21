@@ -34,6 +34,7 @@ jobs:
           ./bin/* -openapi > openapi.json
           cat ./openapi.json
           mkdir confluence
+          cp README.md ./confluence/story.md
       - name: Generate markdown docs
         uses: docker://swaggest/swac
         with:
