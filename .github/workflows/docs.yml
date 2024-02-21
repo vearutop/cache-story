@@ -49,7 +49,7 @@ jobs:
         uses: markdown-confluence/publish-action@v5
         with:
           confluenceBaseUrl: https://vearutop.atlassian.net
-          confluenceParentId: 2097155
+          confluenceParentId: 65538
           folderToPublish: confluence
           atlassianUserName: ${{ secrets.ATLASSIAN_USERNAME }}
           atlassianApiToken: ${{ secrets.ATLASSIAN_API_TOKEN }}
