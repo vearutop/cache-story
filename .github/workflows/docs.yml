@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - v*
+  pull_request:
 
 env:
   GO111MODULE: "on"
@@ -37,7 +38,7 @@ jobs:
       - name: Generate markdown docs
         uses: docker://swaggest/swac
         with:
-          args: /bin/sh -c "swac markdown ./openapi.json --add-schema-url openapi.json --out ./wiki/API-Docs.md;swac markdown ./openapi.json --confluence --out ./confluence/API-Docs.md;mv -f ./openapi.json ./wiki/openapi.json"
+          args: /bin/sh -c "swac markdown ./openapi.json --add-schema-url openapi.json --out ./wiki/API-Docs.md;swac markdown ./openapi.json --out ./confluence/API-Docs.md;mv -f ./openapi.json ./wiki/openapi.json"
       - name: Push to wiki
         run: |
           cd wiki
