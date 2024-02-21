@@ -1,0 +1,4 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Wed Feb 21 17:40:31 GMT 2024","Wed Feb 21 17:40:31 GMT 2024","31","","cache-story-integration-test","","","","Unhappy path.","features/Hello.feature"
+"passed","Wed Feb 21 17:40:31 GMT 2024","Wed Feb 21 17:40:31 GMT 2024","38","","cache-story-integration-test","","","","Happy path.","features/Hello.feature"
+"passed","Wed Feb 21 17:40:31 GMT 2024","Wed Feb 21 17:40:31 GMT 2024","9","","cache-story-integration-test","","","","Buggy path.","features/Hello.feature"
